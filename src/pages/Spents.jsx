@@ -46,18 +46,22 @@ export const Spents = () => {
 	};
 	const [trySubmit, setTrySubmit] = useState(false);
 	const modal = useRef(null);
+
+	const getRecommendations = () => {
+		api.get('/recommendation/' + sessionStorage.getItem('UserId')).then((res) => {
+			setRecommendations(res.data);
+		});
+	};
+
+
 	useEffect(() => {
 		const modalElement = document.getElementById('ModalCadastrarGasto');
 		modalElement.addEventListener('hidden.bs.modal', handleFormSubmit);
 
+
 		const getSpents = () => {
 			api.get('/spent/by-guardian-id/' + sessionStorage.getItem('UserId')).then((res) => {
 				setSpents(res.data);
-				const getRecommendations = () => {
-					api.get('/recommendation/' + sessionStorage.getItem('UserId')).then((res) => {
-						setRecommendations(res.data);
-					});
-				};
 				getRecommendations();
 			});
 		};
@@ -85,12 +89,12 @@ export const Spents = () => {
 			api
 				.post('/spent', newSpent)
 				.then((res) => {
-					console.log(res);
 					setSpents((oldList) => [...oldList, res.data]);
 				})
 				.catch((err) => console.error(err))
 				.finally(() => {
 					setTrySubmit(false);
+					getRecommendations();
 				});
 		}
 	}, [trySubmit]);
@@ -103,6 +107,8 @@ export const Spents = () => {
 		e.preventDefault();
 		api.delete(`/spent/${id}`).then(() => {
 			setSpents((oldList) => oldList.filter((spent) => spent.id != id));
+		}).finally(() => {
+			getRecommendations();
 		});
 	};
 
