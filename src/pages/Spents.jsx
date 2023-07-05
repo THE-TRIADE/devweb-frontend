@@ -20,6 +20,7 @@ export const Spents = () => {
 		activityId: '',
 	});
 	const [spents, setSpents] = useState([]);
+	const [recommendations, setRecommendations] = useState([]);
 	const [dependents, setDependents] = useState([
 		{
 			dependentName: '',
@@ -52,9 +53,14 @@ export const Spents = () => {
 		const getSpents = () => {
 			api.get('/spent/by-guardian-id/' + sessionStorage.getItem('UserId')).then((res) => {
 				setSpents(res.data);
+				const getRecommendations = () => {
+					api.get('/recommendation/' + sessionStorage.getItem('UserId')).then((res) => {
+						setRecommendations(res.data);
+					});
+				};
+				getRecommendations();
 			});
 		};
-
 		const getDependents = () => {
 			api.get('/guardian/' + sessionStorage.getItem('UserId')).then((res) => {
 				const listDependent = res.data.guards.map((guard) => {
@@ -100,12 +106,27 @@ export const Spents = () => {
 		});
 	};
 
+	const randomIndex = Math.floor(Math.random() * recommendations.length);
+
 	return (
 		<div className="container pb-5">
 			<Menu />
 			<div className="row">
 				<div className="col-12">
 					<TitlePages text="Gastos" textButton="Cadastrar Gasto" target="#ModalCadastrarGasto" />
+					<div className="row">
+						<div className="p-3 bg-warning bg-opacity-50 border border-warning fw-semibold border-opacity-50 rounded-3">
+							{recommendations.length > 1 ? (
+								<p className="p-0 m-0">{recommendations[randomIndex]}</p>
+							) : (
+								recommendations.map((recommendation, index) => (
+									<p className="p-0 m-0" key={index}>
+										{recommendation}
+									</p>
+								))
+							)}
+						</div>
+					</div>
 					<div className="row">
 						<Link className="customLink my-3 text-secondary text-end fs-5" to={'/spentsreport'}>
 							Ver resumo de gastos
