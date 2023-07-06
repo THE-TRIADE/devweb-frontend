@@ -34,8 +34,8 @@ const getDependent = (dependentId) => {
 };
 
 const getGuardiansByDependentId = (dependentId) => {
-	return api.get('/guard/by-dependent-id/' + dependentId).then((res) => {
-		return res.data.map((guard) => ({ id: guard.guardianId, name: guard.guardianName }));
+	return api.get('/relation/by-dependent-id/' + dependentId).then((res) => {
+		return res.data.map((guard) => ({ id: guard.userId, name: guard.userName }));
 	});
 };
 
