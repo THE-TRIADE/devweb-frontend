@@ -36,9 +36,9 @@ export const ManageGuardians = () => {
 	const [guards, setGuards] = useState([]);
 	const [sentForm, setSentForm] = useState({
 		daysOfWeek: [],
-		guardianRole: '-1',
+		userRole: '-1',
 		dependentId: '-1',
-		guardianId: sessionStorage.getItem('UserId'),
+		userId: sessionStorage.getItem('UserId'),
 	});
 	const [guardians, setGuardians] = useState([]);
 	const [trySubmit, setTrySubmit] = useState(false);
@@ -56,7 +56,7 @@ export const ManageGuardians = () => {
 	};
 
 	const deleteGuard = (guardId) => {
-		api.delete('/guard/' + guardId).then(() => {
+		api.delete('/relation/' + guardId).then(() => {
 			setGuards((prevState) => prevState.filter((guard) => guard.id != guardId));
 		});
 	};
@@ -65,7 +65,7 @@ export const ManageGuardians = () => {
 		getGuardians();
 
 		const getGuards = (dependentId) => {
-			api.get('/guard/by-dependent-id/' + dependentId).then((res) => {
+			api.get('/relation/by-dependent-id/' + dependentId).then((res) => {
 				setGuards((prevGuards) => {
 					const newGuards = res.data.filter(
 						(newGuard) => !prevGuards.some((prevGuard) => prevGuard.id === newGuard.id),
@@ -74,7 +74,7 @@ export const ManageGuardians = () => {
 				});
 			});
 		};
-		api.get('/familyGroup/' + id).then((res) => {
+		api.get('/group-user-dependent/' + id).then((res) => {
 			setFamilyGroup(res.data);
 			setGuards([]);
 			res.data.dependents.forEach((dependent) => {
@@ -90,7 +90,7 @@ export const ManageGuardians = () => {
 				newGuard.daysOfWeek = null;
 			}
 			api
-				.post('/guard', newGuard)
+				.post('/relation', newGuard)
 				.then((res) => {
 					setGuards((oldList) => {
 						const newArray = oldList;
@@ -102,9 +102,9 @@ export const ManageGuardians = () => {
 				.finally(() => {
 					setSentForm({
 						daysOfWeek: [],
-						guardianRole: '-1',
+						userRole: '-1',
 						dependentId: '-1',
-						guardianId: sessionStorage.getItem('UserId'),
+						userId: sessionStorage.getItem('UserId'),
 					});
 
 					setTrySubmit(false);
@@ -139,19 +139,19 @@ export const ManageGuardians = () => {
 										.map((guard) => (
 											<div
 												className="col-12 col-md-4 mb-3 mb-md-0 mt-3"
-												key={`card-gd-${guard.id}-${guard.dependentId}-${guard.guardianId}`}
+												key={`card-gd-${guard.id}-${guard.dependentId}-${guard.userId}`}
 											>
 												<div className="card h-100">
 													<div className="card-body">
 														<p>
-															<span className="fw-bold text-secondary">Responsável:</span> {guard.guardianName}
+															<span className="fw-bold text-secondary">Responsável:</span> {guard.userName}
 														</p>
 														<p>
 															<span className="fw-bold text-secondary">Dependente:</span> {guard.dependentName}
 														</p>
 														<p>
 															<span className="fw-bold text-secondary">Papel no grupo familiar: </span>
-															{guardianRoleEnum.find((role) => role.value == guard.guardianRole).key}
+															{guardianRoleEnum.find((role) => role.value == guard.userRole).key}
 														</p>
 														{guard.daysOfWeek != null && !!guard.daysOfWeek.length && (
 															<p>
@@ -214,9 +214,9 @@ export const ManageGuardians = () => {
 											return { optName: guardian.name, optValue: guardian.id.toString() };
 										}),
 									]}
-									value={sentForm.guardianId}
+									value={sentForm.userId}
 									label="Responsável"
-									onChange={(e) => updateForm('guardianId', e)}
+									onChange={(e) => updateForm('userId', e)}
 								/>
 								<SelectInput
 									options={[
@@ -225,9 +225,9 @@ export const ManageGuardians = () => {
 											return { optName: role.key, optValue: role.value.toString() };
 										}),
 									]}
-									value={sentForm.guardianRole}
+									value={sentForm.userRole}
 									label="Papel do responsável"
-									onChange={(e) => updateForm('guardianRole', e)}
+									onChange={(e) => updateForm('userRole', e)}
 								/>
 								<CheckBoxGroupInput
 									label="Dias da semana da guarda"

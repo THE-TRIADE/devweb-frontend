@@ -41,7 +41,7 @@ export const FamilyGroupDetails = () => {
 
 	useEffect(() => {
 		const getGuards = (dependentId) => {
-			api.get('/guard/by-dependent-id/' + dependentId).then((res) => {
+			api.get('/relation/by-dependent-id/' + dependentId).then((res) => {
 				setGuards((prevGuards) => ({
 					...prevGuards,
 					[dependentId]: res.data,
@@ -77,8 +77,8 @@ export const FamilyGroupDetails = () => {
 								{guards[dependent.id] &&
 									guards[dependent.id].map((guard) => (
 										<p key={guard.id} className="my-2">
-											{guard.guardianName} :{' '}
-											<span>{guardianRoleEnum.find((role) => role.value == guard.guardianRole).key}</span>
+											{guard.userName} :{' '}
+											<span>{guardianRoleEnum.find((role) => role.value == guard.userRole).key}</span>
 											{/* <span className="text-primary mx-5">{guard.daysOfWeek}</span> */}
 										</p>
 									))}
