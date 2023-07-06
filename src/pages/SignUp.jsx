@@ -51,7 +51,7 @@ export const SignUp = () => {
 				const newGuardian = { ...signUpForm };
 				delete newGuardian.passwordConfirmation;
 				api
-					.post('/guardian', newGuardian)
+					.post('/user', newGuardian)
 					.then((res) => {
 						console.log(res);
 

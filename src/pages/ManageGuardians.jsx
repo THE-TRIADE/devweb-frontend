@@ -50,7 +50,7 @@ export const ManageGuardians = () => {
 	};
 
 	const getGuardians = () => {
-		api.get('/guardian').then((res) => {
+		api.get('/user').then((res) => {
 			setGuardians(res.data);
 		});
 	};

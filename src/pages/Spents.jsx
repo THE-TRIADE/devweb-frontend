@@ -15,7 +15,7 @@ export const Spents = () => {
 		name: '',
 		value: '',
 		paidOn: '',
-		guardianId: sessionStorage.getItem('UserId'),
+		userId: sessionStorage.getItem('UserId'),
 		dependentId: '-1',
 		activityId: '',
 	});
@@ -39,7 +39,7 @@ export const Spents = () => {
 			name: '',
 			value: '',
 			paidOn: '',
-			guardianId: sessionStorage.getItem('UserId'),
+			userId: sessionStorage.getItem('UserId'),
 			dependentId: '-1',
 			activityId: '',
 		});
@@ -60,17 +60,17 @@ export const Spents = () => {
 
 
 		const getSpents = () => {
-			api.get('/spent/by-guardian-id/' + sessionStorage.getItem('UserId')).then((res) => {
+			api.get('/spent/by-user-id/' + sessionStorage.getItem('UserId')).then((res) => {
 				setSpents(res.data);
 				getRecommendations();
 			});
 		};
 		const getDependents = () => {
-			api.get('/guardian/' + sessionStorage.getItem('UserId')).then((res) => {
-				const listDependent = res.data.guards.map((guard) => {
+			api.get('/user/' + sessionStorage.getItem('UserId')).then((res) => {
+				const listDependent = res.data.relations.map((relation) => {
 					return {
-						dependentName: guard.dependentName,
-						dependentId: guard.dependentId,
+						dependentName: relation.dependentName,
+						dependentId: relation.dependentId,
 					};
 				});
 				setDependents(listDependent);

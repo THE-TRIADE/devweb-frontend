@@ -9,8 +9,8 @@ export const Home = () => {
 	const [familyGroups, setFamilyGroups] = useState([]);
 	const getAllFamilyGroups = useCallback(() => {
 		let id = sessionStorage.getItem('UserId');
-		api.get('/guardian/' + id).then((res) => {
-			setFamilyGroups(res.data.familyGroups);
+		api.get('/user/' + id).then((res) => {
+			setFamilyGroups(res.data.groups);
 		});
 	}, []);
 

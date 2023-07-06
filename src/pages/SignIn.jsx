@@ -37,7 +37,7 @@ export const SignIn = () => {
 
 			if (isValid) {
 				api
-					.post('/guardian/login', login)
+					.post('/user/login', login)
 					.then((res) => {
 						console.log(res);
 						console.log(res.data.id);

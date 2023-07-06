@@ -52,7 +52,7 @@ export const DependentActivities = () => {
 		dateEnd: '',
 		hourEnd: '',
 		dependentId: id,
-		currentGuardian: '-1',
+		currentUser: '-1',
 		actor: '-1',
 		createdBy: sessionStorage.getItem('UserId'),
 		repeat: false,
@@ -133,7 +133,7 @@ export const DependentActivities = () => {
 						dateEnd: '',
 						hourEnd: '',
 						dependentId: id,
-						currentGuardian: '-1',
+						currentUser: '-1',
 						actor: '-1',
 						createdBy: sessionStorage.getItem('UserId'),
 						repeat: false,
@@ -530,9 +530,9 @@ export const DependentActivities = () => {
 												return { optName: guardian.name, optValue: guardian.id.toString() };
 											}),
 										]}
-										value={sentForm.currentGuardian}
+										value={sentForm.currentUser}
 										label="Responsável atual"
-										onChange={(e) => updateForm('currentGuardian', e)}
+										onChange={(e) => updateForm('currentUser', e)}
 									/>
 									<SelectInput
 										options={[

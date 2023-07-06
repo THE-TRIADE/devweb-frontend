@@ -12,17 +12,17 @@ export const SpentsReports = () => {
 	};
 	useEffect(() => {
 		const getSpents = () => {
-			api.get('/spent/by-guardian-id/' + sessionStorage.getItem('UserId')).then((res) => {
+			api.get('/spent/by-user-id/' + sessionStorage.getItem('UserId')).then((res) => {
 				setSpents(res.data);
 			});
 		};
 
 		const getDependents = () => {
-			api.get('/guardian/' + sessionStorage.getItem('UserId')).then((res) => {
-				const listDependent = res.data.guards.map((guard) => {
+			api.get('/user/' + sessionStorage.getItem('UserId')).then((res) => {
+				const listDependent = res.data.relations.map((relation) => {
 					return {
-						dependentName: guard.dependentName,
-						dependentId: guard.dependentId,
+						dependentName: relation.dependentName,
+						dependentId: relation.dependentId,
 					};
 				});
 				setDependents(listDependent);
@@ -65,7 +65,7 @@ export const SpentsReports = () => {
 															<td>{spent.name}</td>
 															<td>R$ {(spent.value / 100).toFixed(2).replace('.', ',')}</td>
 															<td>{new Date(spent.paidOn).toLocaleDateString("pt-BR", { dateFormat: "short", timeZone: "UTC" })}</td>
-															<td>{spent.guardianName}</td>
+															<td>{spent.userName}</td>
 														</tr>
 													);
 												})}
