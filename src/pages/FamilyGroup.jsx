@@ -13,8 +13,8 @@ import { SelectInput } from '../components/Inputs/SelectInput';
 export const FamilyGroup = () => {
 	const [familyGroupForm, setfamilyGroupForm] = useState({
 		name: '',
-		guardianId: sessionStorage.getItem('UserId'),
-		guardianRole: '-1',
+		userId: sessionStorage.getItem('UserId'),
+		userRole: '-1',
 	});
 	const [dependents, setDependents] = useState([]);
 	const [errorMessages, setErrorMessages] = useState({
@@ -50,7 +50,7 @@ export const FamilyGroup = () => {
 			if (isValid) {
 				const newFamilyGroup = { ...familyGroupForm, dependents };
 				api
-					.post('/familyGroup', newFamilyGroup)
+					.post('/group-user-dependent', newFamilyGroup)
 					.then(() => {
 						navigate('/');
 					})
@@ -127,9 +127,9 @@ export const FamilyGroup = () => {
 										return { optName: role.key, optValue: role.value.toString() };
 									}),
 								]}
-								value={familyGroupForm.guardianRole}
+								value={familyGroupForm.userRole}
 								label="Papel do responsável"
-								onChange={(e) => updateForm('guardianRole', e)}
+								onChange={(e) => updateForm('userRole', e)}
 							/>
 							<h5 className="text-center mt-5 text-secondary">Cadastro de dependente(s)</h5>
 

@@ -32,7 +32,7 @@ export const FamilyGroupDetails = () => {
 
 	useEffect(() => {
 		const getFamilyGroup = () => {
-			api.get('/familyGroup/' + id).then((res) => {
+			api.get('/group-user-dependent/' + id).then((res) => {
 				setFamilyGroup(res.data);
 			});
 		};

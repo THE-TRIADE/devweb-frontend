@@ -19,7 +19,7 @@ export const Home = () => {
 	}, [getAllFamilyGroups]);
 	const deleteFamilyGroup = (e, id) => {
 		e.preventDefault();
-		api.delete('/familyGroup/' + id).then(() => getAllFamilyGroups());
+		api.delete('/group-user-dependent/' + id).then(() => getAllFamilyGroups());
 	};
 	return (
 		<div className="app">
