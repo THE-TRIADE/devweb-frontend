@@ -41,7 +41,7 @@ export const CheckBoxGroupInput = ({ label, options, onChange }) => {
 							onChange={(e) => updateCheckBoxGroup(e, option.value)}
 							key={`ckbox-${option.value}`}
 						/>
-						<label className="btn btn-outline-info w-100" htmlFor={`ckbox-${option.value}`}>
+						<label className="btn btn-outline-success w-100" htmlFor={`ckbox-${option.value}`}>
 							{option.name}
 						</label>
 					</div>

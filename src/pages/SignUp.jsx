@@ -134,7 +134,7 @@ export const SignUp = () => {
 			<div className="container text-center custom-card mt-5 pt-5">
 				<h1>Cadastro</h1>
 				<p>
-					Cadastre-se e tenha acesso ao <b>Family</b>Routine
+					Cadastre-se e tenha acesso ao <b>Pet</b>Routine
 				</p>
 				<div className="row text-start">
 					<div className="col-12">

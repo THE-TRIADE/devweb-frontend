@@ -131,7 +131,7 @@ export const FamilyGroup = () => {
 								label="Papel do responsável"
 								onChange={(e) => updateForm('userRole', e)}
 							/>
-							<h5 className="text-center mt-5 text-secondary">Cadastro de dependente(s)</h5>
+							<h5 className="text-center mt-5 text-secondary">Cadastro de pet(s)</h5>
 
 							<div className="my-3 text-start">
 								{Array.from({ length: dependentCount }).map((_, index) => (
@@ -143,7 +143,7 @@ export const FamilyGroup = () => {
 										key={'kdf' + index}
 									/>
 								))}
-								<ButtonOutline onClick={() => setDependentCount((ps) => ps + 1)} text="Adicionar dependente +" />
+								<ButtonOutline onClick={() => setDependentCount((ps) => ps + 1)} text="Adicionar pet +" />
 							</div>
 							<Button onClick={submitFamilyGroupForm} text="Finalizar Cadastro" />
 						</div>

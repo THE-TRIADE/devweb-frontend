@@ -73,7 +73,7 @@ export const FamilyGroupDetails = () => {
 					{familyGroup &&
 						familyGroup.dependents.map((dependent) => (
 							<div key={dependent.id}>
-								<p className="fw-bold">Dependente: {dependent.name}</p>
+								<p className="fw-bold">Pet: {dependent.name}</p>
 								{guards[dependent.id] &&
 									guards[dependent.id].map((guard) => (
 										<p key={guard.id} className="my-2">
@@ -86,7 +86,7 @@ export const FamilyGroupDetails = () => {
 						))}
 				</div>
 				<div className="row">
-					<p className="fw-bold text-secondary my-2">Dependentes:</p>
+					<p className="fw-bold text-secondary my-2">Pets:</p>
 					{familyGroup &&
 						familyGroup.dependents.map((dependent) => (
 							<CardDependents

@@ -11,7 +11,7 @@ export const CardFamilyGroup = ({ familyGroup, deleteFunction }) => {
 						<h5 className="text-primary fw-bold">{familyGroup.name}</h5>
 					</div>
 					<div className="card-body">
-						<h5 className="card-title text-secondary">Dependentes:</h5>
+						<h5 className="card-title text-secondary">Pets:</h5>
 						{familyGroup.dependents.map((dependent) => (
 							<p className="mb-0" key={dependent.id}>
 								{dependent.name}

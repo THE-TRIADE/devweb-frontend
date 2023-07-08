@@ -25,20 +25,20 @@ export const DependentForm = ({ counter, updateDependent, updateDependentCount }
 	return (
 		<>
 			<div className="pt-4 d-flex flex-row justify-content-between">
-				<b className="text-start h5">Dependente {counter}</b>
+				<b className="text-start h5 pt-2">Pet {counter}</b>
 				{counter > 1 && <ButtonOutline onClick={() => updateDependentCount((ps) => ps - 1)} text="Excluir" />}
 			</div>
 			<TextualInput
 				placeholder="Nome"
-				label="Nome do dependente"
+				label="Nome do pet"
 				value={dependent.name}
 				onChange={(e) => updateForm('name', e)}
 			/>
-			<CpfInput
-				placeholder="CPF"
-				value={dependent.cpf}
-				label="CPF do dependente"
-				onChange={(e) => updateForm('cpf', e)}
+			<TextualInput
+				placeholder="Raça"
+				label="Raça do pet"
+				value={dependent.name}
+				onChange={(e) => updateForm('race', e)}
 			/>
 			<DateInput
 				label="Data de Nascimento"
