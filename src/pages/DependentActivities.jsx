@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import {Fragment, useState} from 'react';
 import { api } from '../config/api';
 import { useEffect } from 'react';
 import { useParams } from 'react-router-dom';
@@ -203,6 +203,10 @@ export const DependentActivities = () => {
 							target="#ModalCadastrarAtividades"
 						/>
 					)}
+					<div className="my-2">
+						<a className="btn btn-outline-success" data-bs-toggle="modal" data-bs-target="#ModalGerenciarAtividades">Gerenciar Categorias de Atividades</a>
+					</div>
+
 					<>
 						{/* CONTAGEM DAS ATIVIDADES INICIO */}
 						<div className="resumo">
@@ -473,6 +477,94 @@ export const DependentActivities = () => {
 					</div>
 				)}
 				{/* MODAL DE FINISH ACTIVITY FIM */}
+				{/* MODAL DE GERENCIAR ACTIVITY INICIO */}
+				{!!activities.length && (
+					<div
+						className="modal fade"
+						id="ModalGerenciarAtividades"
+						data-bs-backdrop="static"
+						data-bs-keyboard="false"
+						tabIndex="-1"
+						aria-labelledby="ModalGerenciarAtividades"
+						aria-hidden="true"
+					>
+						<div className="modal-dialog modal-dialog-centered">
+							<div className="modal-content">
+								<div className="modal-header">
+									<h1 className="modal-title fs-5 secondary-color" id="ModalGerenciarAtividadesLabel">
+										Categorias de Atividades
+									</h1>
+									<button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+								</div>
+								<div className="modal-body">
+									<div className="row">
+													<div className="table-responsive">
+														<table className="table">
+															<thead>
+
+															<tr>
+																<th scope="col">Categoria</th>
+															</tr>
+															</thead>
+															<tbody>
+															{activities.map((activity) => {
+																return (
+																	<tr key={activity.id}>
+																		<td>{activity.name}</td>
+																		<td><a className="text-danger fw-bold text-decoration-none" role="button">Excluir</a></td>
+																	</tr>
+																);
+															})}
+															</tbody>
+														</table>
+													</div>
+									</div>
+									<div className="text-end">
+										<button className="buttonHeader my-2 bg-success" data-bs-toggle="modal"
+														data-bs-target="#ModalCadastrarCategoria">Cadastrar Categoria
+										</button>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				)}
+				{/* MODAL DE GERENCIAR ACTIVITY FIM */}
+				{/* MODAL DE CADASTRAR CATEGORIA INICIO */}
+				{!!activities.length && (
+					<div
+						className="modal fade"
+						id="ModalCadastrarCategoria"
+						data-bs-backdrop="static"
+						data-bs-keyboard="false"
+						tabIndex="-1"
+						aria-labelledby="ModalGerenciarAtividades"
+						aria-hidden="true"
+					>
+						<div className="modal-dialog modal-dialog-centered">
+							<div className="modal-content">
+								<div className="modal-header">
+									<h1 className="modal-title fs-5 secondary-color" id="ModalGerenciarAtividadesLabel">
+										Cadastrar Categoria de Atividade
+									</h1>
+									<button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+								</div>
+								<div className="modal-body">
+									<TextualInput
+										placeholder="Nome"
+										label="Nome da Categoria"
+										value={sentForm.name}
+										onChange={(e) => updateForm('name', e)}
+									/>
+								</div>
+								<div className="modal-footer">
+									<button className="button my-2">Cadastrar</button>
+								</div>
+							</div>
+						</div>
+					</div>
+				)}
+				{/* MODAL DE CADASTRAR CATEGORIA  FIM */}
 				{/* MODAL CADASTRO DE ATIVIDADE INICIO */}
 				{!!dependent && !!guardians.length && (
 					<div

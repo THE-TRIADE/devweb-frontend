@@ -31,12 +31,12 @@ body,
 h1,
 h2,
 h3 {
-	color: #03a7b8;
+	color: #00923f;
 	font-weight: 600;
 }
 h4 {
 	font-weight: bold;
-	color: #cb8fff;
+	color: #da251c;
 }
 .container p {
 	color: #595d6e;
@@ -45,13 +45,13 @@ h4 {
 }
 
 b {
-	color: #cb8fff;
+	color: #da251c;
 }
 .bg-secondary {
-	background: #cb8fff;
+	background: #da251c;
 }
 .secondary-color {
-	color: #cb8fff;
+	color: #da251c;
 }
 .app .svg {
 	width: 100%;
@@ -63,7 +63,7 @@ b > button.buttonOutline {
 	color: red;
 }
 .bg-aqua{
-	background-color: #03a7b8!important;
+	background-color: #00923f!important;
 	color: white!important;
 }
 @media print {
