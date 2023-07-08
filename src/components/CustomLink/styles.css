@@ -1,9 +1,9 @@
 .customLink {
-	color: #03a7b8;
+	color: #00923f;
 	font-weight: bold;
 	text-decoration: none;
 	margin-top: 1rem;
 }
 .customLink:hover {
-	color: #cb8fff;
+	color: #da251c;
 }

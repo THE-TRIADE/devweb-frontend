@@ -1,6 +1,6 @@
 .navbar {
-	background-color: #03a7b8;
-	box-shadow: 0 2px 4px rgba(139, 92, 246, 0.5);
+	background-color: #00923f;
+	box-shadow: 0 2px 4px rgb(164, 211, 107);
 }
 
 .nav-link {
@@ -10,12 +10,12 @@
 }
 
 .active {
-	color: rgb(112 54 162) !important;
+	color: #89ff00 !important;
 	font-weight: bold;
 }
 .nav-link:hover,
 .nav-link:focus {
-	color: #c3b6d4;
+	color: #a4d36b;
 }
 
 .navbar-brand {
