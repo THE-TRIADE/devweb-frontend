@@ -15,6 +15,7 @@ export const AccordionActivities = ({ activity, parent, deleteFunction, target, 
 					aria-expanded="false"
 					aria-controls={'collapse' + activity.id}
 				>
+					<span className="badge rounded-pill border border-success text-success me-2">Limpeza</span>
 					{activity.name}
 				</button>
 			</h2>

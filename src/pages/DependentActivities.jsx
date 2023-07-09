@@ -203,10 +203,20 @@ export const DependentActivities = () => {
 							target="#ModalCadastrarAtividades"
 						/>
 					)}
-					<div className="my-2">
-						<a className="btn btn-outline-success" data-bs-toggle="modal" data-bs-target="#ModalGerenciarAtividades">Gerenciar Categorias de Atividades</a>
+					<div className="my-2 d-none">
+						<a className="btn btn-outline-success " data-bs-toggle="modal" data-bs-target="#ModalGerenciarAtividades">Gerenciar Categorias de Atividades</a>
 					</div>
-
+					<SelectInput
+						options={[
+							{ optName: 'Escolha uma categoria', optValue: '-1', disabled: true },
+							...guardians.map((guardian) => {
+								return { optName: guardian.name, optValue: guardian.id.toString() };
+							}),
+						]}
+						value={sentForm.currentUser}
+						label="Filtrar por Categoria"
+						onChange={(e) => updateForm('currentUser', e)}
+					/>
 					<>
 						{/* CONTAGEM DAS ATIVIDADES INICIO */}
 						<div className="resumo">
@@ -220,6 +230,7 @@ export const DependentActivities = () => {
 							</div>
 							<div className="my-2">
 								<span className="badge rounded-pill bg-warning">{ActivityStateEnum.in_progress}</span>
+								<span className="p fw-bold text-warning"> Em Andamento: </span>
 								<span className="p fw-bold text-warning"> Em Andamento: </span>
 								<span className="text-dark">
 									{activities.filter((activity) => activity.state === 'IN_PROGRESS').length}
@@ -624,6 +635,17 @@ export const DependentActivities = () => {
 										]}
 										value={sentForm.currentUser}
 										label="Responsável atual"
+										onChange={(e) => updateForm('currentUser', e)}
+									/>
+									<SelectInput
+										options={[
+											{ optName: 'Escolha uma categoria', optValue: '-1', disabled: true },
+											...guardians.map((guardian) => {
+												return { optName: guardian.name, optValue: guardian.id.toString() };
+											}),
+										]}
+										value={sentForm.currentUser}
+										label="Categoria de Ativiade"
 										onChange={(e) => updateForm('currentUser', e)}
 									/>
 									<SelectInput
