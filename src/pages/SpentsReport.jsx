@@ -38,7 +38,7 @@ export const SpentsReports = () => {
 			<div className="row">
 				<div className="col-12">
 					<div className="my-5 pt-5 d-flex flex-column flex-sm-row justify-content-between">
-						<h3 className="pt-3 ">Resumo de Gastos por Dependente</h3>
+						<h3 className="pt-3 ">Resumo de Gastos por Pet</h3>
 						<div className="hide-print">
 							<ButtonAction bgColor="bg-info" text="Imprimir Resumo" onClick={printWindow} />
 						</div>

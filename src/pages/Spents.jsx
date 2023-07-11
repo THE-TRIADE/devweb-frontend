@@ -180,13 +180,13 @@ export const Spents = () => {
 									/>
 									<SelectInput
 										options={[
-											{ optName: 'Escolha um dependente', optValue: '-1', disabled: true },
+											{ optName: 'Escolha um pet', optValue: '-1', disabled: true },
 											...dependents.map((dependent) => {
 												return { optName: dependent.dependentName, optValue: dependent.dependentId.toString() };
 											}),
 										]}
 										value={sentForm.dependentId}
-										label="Dependente"
+										label="Pet"
 										onChange={(e) => updateForm('dependentId', e)}
 									/>
 								</div>
