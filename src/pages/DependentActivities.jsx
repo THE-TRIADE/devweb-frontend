@@ -42,6 +42,7 @@ const getGuardiansByDependentId = (dependentId) => {
 export const DependentActivities = () => {
 	const { id } = useParams();
 	const [activities, setActivities] = useState([]);
+	const [categories, setCategories] = useState([]);
 	const [dependent, setDependent] = useState({});
 	const [guardians, setGuardians] = useState([]);
 	const [submitActivity, setSubmitActivity] = useState(false);
@@ -58,6 +59,7 @@ export const DependentActivities = () => {
 		repeat: false,
 		daysToRepeat: [],
 		repeatUntil: '',
+		categoryId: '-1',
 	});
 	const [finishActivityId, setFinishActivityId] = useState(0);
 	const [sentFinishForm, setSentFinishForm] = useState({
@@ -78,7 +80,12 @@ export const DependentActivities = () => {
 			}
 		});
 	};
-
+	const getActivitiesByCategoryIdDependentId = (dependentId,categoryId) => {
+		api.get('/activity/by-dependent-id/'+ dependentId + '/by-category-id/' + categoryId)
+			.then((res) => {
+				setActivities(res.data)
+			})
+	};
 	const updateFinishForm = (inputName, event) => {
 		const { checked, value } = event.target;
 
@@ -105,7 +112,14 @@ export const DependentActivities = () => {
 			setActivities(activities);
 		});
 	}, [id]);
-
+	useEffect(() => {
+		const getCategories = () => {
+			api.get('/category').then((res) => {
+				setCategories(res.data);
+			});
+		};
+		getCategories();
+	}, []);
 	useEffect(() => {
 		if (submitActivity) {
 			const newActivity = { ...sentForm };
@@ -139,6 +153,7 @@ export const DependentActivities = () => {
 						repeat: false,
 						daysToRepeat: [],
 						repeatUntil: '',
+						categoryId:'',
 					});
 
 					setSubmitActivity(false);
@@ -203,19 +218,18 @@ export const DependentActivities = () => {
 							target="#ModalCadastrarAtividades"
 						/>
 					)}
-					<div className="my-2 d-none">
-						<a className="btn btn-outline-success " data-bs-toggle="modal" data-bs-target="#ModalGerenciarAtividades">Gerenciar Categorias de Atividades</a>
+					<div className="my-2">
+						<a className="btn btn-outline-success " data-bs-toggle="modal" data-bs-target="#ModalGerenciarAtividades">Visualizar Categorias de Atividades</a>
 					</div>
 					<SelectInput
 						options={[
 							{ optName: 'Escolha uma categoria', optValue: '-1', disabled: true },
-							...guardians.map((guardian) => {
-								return { optName: guardian.name, optValue: guardian.id.toString() };
+							...categories.map((category) => {
+								return { optName: category.name, optValue: category.id.toString() };
 							}),
 						]}
-						value={sentForm.currentUser}
 						label="Filtrar por Categoria"
-						onChange={(e) => updateForm('currentUser', e)}
+						onChange={(e) => getActivitiesByCategoryIdDependentId(id, e.target.value)}
 					/>
 					<>
 						{/* CONTAGEM DAS ATIVIDADES INICIO */}
@@ -230,7 +244,6 @@ export const DependentActivities = () => {
 							</div>
 							<div className="my-2">
 								<span className="badge rounded-pill bg-warning">{ActivityStateEnum.in_progress}</span>
-								<span className="p fw-bold text-warning"> Em Andamento: </span>
 								<span className="p fw-bold text-warning"> Em Andamento: </span>
 								<span className="text-dark">
 									{activities.filter((activity) => activity.state === 'IN_PROGRESS').length}
@@ -518,11 +531,11 @@ export const DependentActivities = () => {
 															</tr>
 															</thead>
 															<tbody>
-															{activities.map((activity) => {
+															{categories.map((category) => {
 																return (
-																	<tr key={activity.id}>
-																		<td>{activity.name}</td>
-																		<td><a className="text-danger fw-bold text-decoration-none" role="button">Excluir</a></td>
+																	<tr key={category.id}>
+																		<td>{category.name}</td>
+																		<td className="d-none"><a className="text-danger fw-bold text-decoration-none" role="button">Excluir</a></td>
 																	</tr>
 																);
 															})}
@@ -531,7 +544,7 @@ export const DependentActivities = () => {
 													</div>
 									</div>
 									<div className="text-end">
-										<button className="buttonHeader my-2 bg-success" data-bs-toggle="modal"
+										<button className="buttonHeader d-none my-2 bg-success" data-bs-toggle="modal"
 														data-bs-target="#ModalCadastrarCategoria">Cadastrar Categoria
 										</button>
 									</div>
@@ -549,7 +562,7 @@ export const DependentActivities = () => {
 						data-bs-backdrop="static"
 						data-bs-keyboard="false"
 						tabIndex="-1"
-						aria-labelledby="ModalGerenciarAtividades"
+						aria-labelledby="ModalCadastrarCategoriaAtividades"
 						aria-hidden="true"
 					>
 						<div className="modal-dialog modal-dialog-centered">
@@ -640,13 +653,13 @@ export const DependentActivities = () => {
 									<SelectInput
 										options={[
 											{ optName: 'Escolha uma categoria', optValue: '-1', disabled: true },
-											...guardians.map((guardian) => {
-												return { optName: guardian.name, optValue: guardian.id.toString() };
+											...categories.map((category) => {
+												return { optName: category.name, optValue: category.id.toString() };
 											}),
 										]}
-										value={sentForm.currentUser}
+										value={sentForm.categoryId}
 										label="Categoria de Ativiade"
-										onChange={(e) => updateForm('currentUser', e)}
+										onChange={(e) => updateForm('categoryId', e)}
 									/>
 									<SelectInput
 										options={[

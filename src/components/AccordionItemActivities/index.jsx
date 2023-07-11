@@ -15,7 +15,7 @@ export const AccordionActivities = ({ activity, parent, deleteFunction, target, 
 					aria-expanded="false"
 					aria-controls={'collapse' + activity.id}
 				>
-					<span className="badge rounded-pill border border-success text-success me-2">Limpeza</span>
+					<span className="badge rounded-pill border border-success text-success me-2">{activity.categoryName}</span>
 					{activity.name}
 				</button>
 			</h2>
@@ -31,6 +31,9 @@ export const AccordionActivities = ({ activity, parent, deleteFunction, target, 
 					</p>
 					<p className=" fw-bold text-primary">
 						Criado Por: <span className="text-dark fw-normal">{activity.createdByName}</span>
+					</p>
+					<p className=" fw-bold text-primary">
+						Categoria: <span className="text-dark fw-normal">{activity.categoryName}</span>
 					</p>
 					<p className=" fw-bold text-primary">
 						Data de Início: <span className="text-dark fw-normal">{new Date(activity.dateStart).toLocaleDateString("pt-BR",{dateStyle:"short",timeZone: "UTC"})}</span>
