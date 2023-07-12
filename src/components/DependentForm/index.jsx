@@ -1,14 +1,14 @@
 import { useState, useEffect } from 'react';
 import { DateInput } from '../Inputs/DateInput';
-import { CpfInput } from '../Inputs/CpfInput';
+// import { CpfInput } from '../Inputs/CpfInput';
 import { TextualInput } from '../Inputs/TextualInput';
 import { ButtonOutline } from '../ButtonOutline';
 import PropTypes from 'prop-types';
 export const DependentForm = ({ counter, updateDependent, updateDependentCount }) => {
 	const [dependent, setDependent] = useState({
 		name: '',
-		cpf: '',
 		birthDate: '',
+		race: '',
 	});
 
 	const updateForm = (inputName, event) => {
@@ -18,7 +18,7 @@ export const DependentForm = ({ counter, updateDependent, updateDependentCount }
 	};
 
 	useEffect(() => {
-		const newDependent = { ...dependent, cpf: dependent.cpf.replace(/\D/g, '') };
+		const newDependent = { ...dependent };
 		updateDependent(newDependent, counter - 1);
 	}, [dependent]);
 
@@ -37,7 +37,7 @@ export const DependentForm = ({ counter, updateDependent, updateDependentCount }
 			<TextualInput
 				placeholder="Raça"
 				label="Raça do pet"
-				value={dependent.name}
+				value={dependent.race}
 				onChange={(e) => updateForm('race', e)}
 			/>
 			<DateInput
