@@ -57,7 +57,8 @@ export const Home = () => {
 		<div className="app">
 			<Menu />
 			<div className="container">
-				<div className="row pt-5 mt-5">
+				{recommendations.length != 0 && (
+						<div className="row pt-5 mt-5">
 					<div className="p-3 bg-warning bg-opacity-50 border border-warning fw-semibold border-opacity-50 rounded-3">
 						{recommendations.length > 1 ? (
 							<p className="p-0 m-0">{recommendations[randomIndex]}</p>
@@ -70,7 +71,8 @@ export const Home = () => {
 						)}
 					</div>
 				</div>
-				<div className="mb-5 pt-5 d-flex flex-column flex-sm-row justify-content-between">
+				)}
+				<div className="my-5 pt-5 d-flex flex-column flex-sm-row justify-content-between">
 					<h3 className="pt-3">Grupos Familiares</h3>
 					<ButtonOutlineSecondary text="Cadastrar Grupo Familiar" link="/familygroup" />
 				</div>
