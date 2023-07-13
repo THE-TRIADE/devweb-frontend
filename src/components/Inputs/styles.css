@@ -1,5 +1,5 @@
 .customLabel {
-	color: #00923f;
+	color: #1666ba;
 	font-weight: 500;
 }
 .inputCustom,
@@ -9,5 +9,5 @@
 }
 .inputCustom:hover,
 .selectCustom:hover {
-	border: 1px solid #00923f;
+	border: 1px solid #1666ba;
 }

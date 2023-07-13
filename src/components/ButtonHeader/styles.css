@@ -1,6 +1,6 @@
 .buttonHeader {
 	height: 45px;
-	background: #da251c;
+	background: #7ab3ef;
 	border: 0;
 	font-weight: 600;
 	border-radius: 10px;
@@ -9,6 +9,6 @@
 	padding: 0px 10px 0px 10px;
 }
 .button:hover {
-	background: #b41e17;
+	background: #0b5fb0;
 	transition: background-color 0.6s;
 }

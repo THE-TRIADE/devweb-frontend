@@ -1,9 +1,9 @@
 .text-secondary {
-	color: #da251c !important;
+	color: #7ab3ef !important;
 }
 .text-primary {
-	color: #00923f !important;
+	color: #1666ba !important;
 }
 .card:hover {
-	border: 1px solid #da251c;
+	border: 1px solid #7ab3ef;
 }

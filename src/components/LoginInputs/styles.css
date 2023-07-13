@@ -4,10 +4,10 @@
 .loginSelect,
 .loginInput {
 	width: 100%;
-	border: 3px solid #da251c;
+	border: 3px solid #7ab3ef;
 	color: #595d6eb2;
 }
 .loginSelect:hover,
 .loginInput:hover {
-	border: 3px solid #00923f;
+	border: 3px solid #1666ba;
 }

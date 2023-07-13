@@ -2,11 +2,11 @@
 	background: transparent;
 	font-weight: 600;
 	font-size: 1.25rem;
-	color: #00923f;
+	color: #1666ba;
 	cursor: pointer;
 	border: 0;
 }
 .buttonOutline:hover {
-	color: #da251c;
+	color: #7ab3ef;
 	transition: background-color 0.6s;
 }
