@@ -6,6 +6,7 @@ import { ForgotPassword } from './pages/ForgotPassword';
 import { NotFound } from './pages/NotFound';
 import { FamilyGroup } from './pages/FamilyGroup';
 import { Spents } from './pages/Spents';
+import { Classes } from './pages/Classes';
 import { FamilyGroupDetails } from './pages/FamilyGroupDetails';
 import { ManageGuardians } from './pages/ManageGuardians';
 import { DependentActivities } from './pages/DependentActivities';
@@ -22,6 +23,7 @@ function App() {
 				<Route path="/signup" element={<SignUp />} />
 				<Route path="/manageguardians/:id" element={<ManageGuardians />} />
 				<Route path="/spents" element={<Spents />} />
+				<Route path="/classes" element={<Classes />} />
 				<Route path="/spentsreport" element={<SpentsReports />} />
 				<Route path="/login" element={<SignIn />} />
 				<Route path="/forgotpassword" element={<ForgotPassword />} />
