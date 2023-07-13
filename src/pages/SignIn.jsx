@@ -98,7 +98,7 @@ export const SignIn = () => {
 		<div className="app justify-content-center pb-5">
 			<div className="container text-center custom-card pb-5">
 				<h2>
-					Entre no <span className="secondary-color">Pet</span>Routine
+					Entre no <span className="secondary-color">Student</span>Routine
 				</h2>
 
 				<p>

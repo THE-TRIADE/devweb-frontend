@@ -11,7 +11,13 @@ import { CustomSpan } from '../components/CustomSpan';
 import { api } from '../config/api';
 import { useNavigate } from 'react-router-dom';
 import { FooterWave } from '../components/FooterWave';
-
+import {SelectInput} from "../components/Inputs/SelectInput/index.jsx";
+import {SelectLoginInput} from "../components/LoginInputs/SelectLoginInput/index.jsx";
+export const guardianRoleEnum = [
+	{ key: 'Responsável', value: 'GUARDIAN' },
+	{ key: 'Diretor', value: 'PRINCIPAL' },
+	{ key: 'Professor', value: 'TEACHER' },
+];
 export const SignUp = () => {
 	const [signUpForm, setSignUpForm] = useState({
 		name: '',
@@ -19,6 +25,7 @@ export const SignUp = () => {
 		cpf: '',
 		birthDate: '',
 		password: '',
+		userRole: '',
 		passwordConfirmation: '',
 	});
 	const [errorMessages, setErrorMessages] = useState({
@@ -27,6 +34,7 @@ export const SignUp = () => {
 		cpf: null,
 		birthDate: null,
 		password: null,
+		userRole: null,
 		passwordConfirmation: null,
 	});
 	const [trySignUp, setTrySignUp] = useState(false);
@@ -114,6 +122,7 @@ export const SignUp = () => {
 			cpf: null,
 			birthDate: null,
 			password: null,
+			userRole: null,
 			passwordConfirmation: null,
 		});
 	};
@@ -134,7 +143,7 @@ export const SignUp = () => {
 			<div className="container text-center custom-card mt-5 pt-5">
 				<h1>Cadastro</h1>
 				<p>
-					Cadastre-se e tenha acesso ao <b>Pet</b>Routine
+					Cadastre-se e tenha acesso ao <b>Student</b>Routine
 				</p>
 				<div className="row text-start">
 					<div className="col-12">
@@ -144,6 +153,17 @@ export const SignUp = () => {
 						{showErrorMessages('email')}
 						<CpfLoginInput placeholder="CPF" value={signUpForm.cpf} onChange={(e) => updateForm('cpf', e)} />
 						{showErrorMessages('cpf')}
+						<SelectLoginInput
+							options={[
+								{ optName: 'Escolha um tipo de usuário', optValue: '-1', disabled: true },
+								...guardianRoleEnum.map((role) => {
+									return { optName: role.key, optValue: role.value.toString() };
+								}),
+							]}
+							value={signUpForm.userRole}
+							label="Papel do responsável"
+							onChange={(e) => updateForm('userRole', e)}
+						/>
 						<DateLoginInput
 							placeholder="Data de Nascimento"
 							value={signUpForm.birthDate}

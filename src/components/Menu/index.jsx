@@ -31,7 +31,13 @@ export const Menu = () => {
 						<li className="nav-item mx-3">
 							<a className={`nav-link ${isActive('/')}`} aria-current="page" href="/">
 								{/*Todo href*/}
-								Início
+								Grupos Familiares
+							</a>
+						</li>
+						<li className="nav-item mx-3">
+							<a className={`nav-link ${isActive('/classes')}`} aria-current="page" href="/classes">
+								{/*Todo href*/}
+								Turmas
 							</a>
 						</li>
 						<li className="nav-item mx-3">
