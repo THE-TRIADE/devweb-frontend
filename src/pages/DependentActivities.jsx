@@ -59,7 +59,7 @@ export const DependentActivities = () => {
 		repeat: false,
 		daysToRepeat: [],
 		repeatUntil: '',
-		categoryId: '-1',
+		courseId: '-1',
 	});
 	const [finishActivityId, setFinishActivityId] = useState(0);
 	const [sentFinishForm, setSentFinishForm] = useState({
@@ -80,8 +80,8 @@ export const DependentActivities = () => {
 			}
 		});
 	};
-	const getActivitiesByCategoryIdDependentId = (dependentId,categoryId) => {
-		api.get('/activity/by-dependent-id/'+ dependentId + '/by-category-id/' + categoryId)
+	const getActivitiesByCategoryIdDependentId = (dependentId,courseId) => {
+		api.get('/activity/by-dependent-id/'+ dependentId + '/by-course-id/' + courseId)
 			.then((res) => {
 				setActivities(res.data)
 			})
@@ -114,7 +114,7 @@ export const DependentActivities = () => {
 	}, [id]);
 	useEffect(() => {
 		const getCategories = () => {
-			api.get('/category').then((res) => {
+			api.get('/course').then((res) => {
 				setCategories(res.data);
 			});
 		};
@@ -153,7 +153,7 @@ export const DependentActivities = () => {
 						repeat: false,
 						daysToRepeat: [],
 						repeatUntil: '',
-						categoryId:'',
+						courseId:'',
 					});
 
 					setSubmitActivity(false);
@@ -657,9 +657,9 @@ export const DependentActivities = () => {
 												return { optName: category.name, optValue: category.id.toString() };
 											}),
 										]}
-										value={sentForm.categoryId}
+										value={sentForm.courseId}
 										label="Disciplina"
-										onChange={(e) => updateForm('categoryId', e)}
+										onChange={(e) => updateForm('courseId', e)}
 									/>
 									<SelectInput
 										options={[

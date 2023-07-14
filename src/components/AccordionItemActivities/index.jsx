@@ -33,7 +33,7 @@ export const AccordionActivities = ({ activity, parent, deleteFunction, target, 
 						Criado Por: <span className="text-dark fw-normal">{activity.createdByName}</span>
 					</p>
 					<p className=" fw-bold text-primary">
-						Disciplina: <span className="text-dark fw-normal">{activity.categoryName}</span>
+						Disciplina: <span className="text-dark fw-normal">{activity.courseName}</span>
 					</p>
 					<p className=" fw-bold text-primary">
 						Data de Início: <span className="text-dark fw-normal">{new Date(activity.dateStart).toLocaleDateString("pt-BR",{dateStyle:"short",timeZone: "UTC"})}</span>
