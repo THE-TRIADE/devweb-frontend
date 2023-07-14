@@ -12,7 +12,7 @@ export const Menu = () => {
 		<nav className="navbar navbar-expand-sm fixed-top hide-print">
 			<div className="container-fluid">
 				<a className="navbar-brand mx-5 text-white" href="#">
-					Pet Routine
+					Student Routine
 				</a>
 
 				<button

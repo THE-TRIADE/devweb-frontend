@@ -127,7 +127,7 @@ export const ManageGuardians = () => {
 				</div>
 				<div className="row">
 					<div className="d-flex flex-row flex-column flex-sm-row justify-content-between">
-						<h5 className="text-primary pt-3">Relações de Responsáveis com Pets</h5>
+						<h5 className="text-primary pt-3">Relações de Responsáveis com Dependentes</h5>
 						<ButtonHeader text="Cadastrar Nova Relação" target="#ModalCadastrarGuarda" />
 					</div>
 					{familyGroup &&
@@ -147,7 +147,7 @@ export const ManageGuardians = () => {
 															<span className="fw-bold text-secondary">Responsável:</span> {guard.userName}
 														</p>
 														<p>
-															<span className="fw-bold text-secondary">Pet:</span> {guard.dependentName}
+															<span className="fw-bold text-secondary">Dependente:</span> {guard.dependentName}
 														</p>
 														<p>
 															<span className="fw-bold text-secondary">Papel no grupo familiar: </span>
@@ -198,13 +198,13 @@ export const ManageGuardians = () => {
 							<div className="modal-body">
 								<SelectInput
 									options={[
-										{ optName: 'Escolha um pet', optValue: '-1', disabled: true },
+										{ optName: 'Escolha um dependente', optValue: '-1', disabled: true },
 										...familyGroup.dependents.map((dependent) => {
 											return { optName: dependent.name, optValue: dependent.id.toString() };
 										}),
 									]}
 									value={sentForm.dependentId}
-									label="Pet"
+									label="Dependente"
 									onChange={(e) => updateForm('dependentId', e)}
 								/>
 								<SelectInput

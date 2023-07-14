@@ -219,16 +219,16 @@ export const DependentActivities = () => {
 						/>
 					)}
 					<div className="my-2">
-						<a className="btn btn-outline-success " data-bs-toggle="modal" data-bs-target="#ModalGerenciarAtividades">Visualizar Categorias de Atividades</a>
+						<a className="btn btn-outline-info " data-bs-toggle="modal" data-bs-target="#ModalGerenciarAtividades">Gerenciar Disciplinas</a>
 					</div>
 					<SelectInput
 						options={[
-							{ optName: 'Escolha uma categoria', optValue: '-1', disabled: true },
+							{ optName: 'Escolha uma disciplina', optValue: '-1', disabled: true },
 							...categories.map((category) => {
 								return { optName: category.name, optValue: category.id.toString() };
 							}),
 						]}
-						label="Filtrar por Categoria"
+						label="Filtrar por Disciplina"
 						onChange={(e) => getActivitiesByCategoryIdDependentId(id, e.target.value)}
 					/>
 					<>
@@ -516,7 +516,7 @@ export const DependentActivities = () => {
 							<div className="modal-content">
 								<div className="modal-header">
 									<h1 className="modal-title fs-5 secondary-color" id="ModalGerenciarAtividadesLabel">
-										Categorias de Atividades
+										Disciplinas
 									</h1>
 									<button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 								</div>
@@ -527,7 +527,7 @@ export const DependentActivities = () => {
 															<thead>
 
 															<tr>
-																<th scope="col">Categoria</th>
+																<th scope="col">Disciplina</th>
 															</tr>
 															</thead>
 															<tbody>
@@ -544,8 +544,8 @@ export const DependentActivities = () => {
 													</div>
 									</div>
 									<div className="text-end">
-										<button className="buttonHeader d-none my-2 bg-success" data-bs-toggle="modal"
-														data-bs-target="#ModalCadastrarCategoria">Cadastrar Categoria
+										<button className="buttonHeader my-2 bg-info" data-bs-toggle="modal"
+														data-bs-target="#ModalCadastrarCategoria">Cadastrar Disciplina
 										</button>
 									</div>
 								</div>
@@ -569,14 +569,14 @@ export const DependentActivities = () => {
 							<div className="modal-content">
 								<div className="modal-header">
 									<h1 className="modal-title fs-5 secondary-color" id="ModalGerenciarAtividadesLabel">
-										Cadastrar Categoria de Atividade
+										Cadastrar Disciplina
 									</h1>
 									<button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 								</div>
 								<div className="modal-body">
 									<TextualInput
 										placeholder="Nome"
-										label="Nome da Categoria"
+										label="Nome da Disciplina"
 										value={sentForm.name}
 										onChange={(e) => updateForm('name', e)}
 									/>
@@ -652,13 +652,13 @@ export const DependentActivities = () => {
 									/>
 									<SelectInput
 										options={[
-											{ optName: 'Escolha uma categoria', optValue: '-1', disabled: true },
+											{ optName: 'Escolha uma disciplina', optValue: '-1', disabled: true },
 											...categories.map((category) => {
 												return { optName: category.name, optValue: category.id.toString() };
 											}),
 										]}
 										value={sentForm.categoryId}
-										label="Categoria de Ativiade"
+										label="Disciplina"
 										onChange={(e) => updateForm('categoryId', e)}
 									/>
 									<SelectInput
@@ -696,7 +696,7 @@ export const DependentActivities = () => {
 									)}
 								</div>
 								<div className="modal-footer">
-									<button type="button" className="btn btn-secondary" onClick={submitActivityForm}>
+									<button type="button" className="btn btn-primary" onClick={submitActivityForm}>
 										Cadastrar
 									</button>
 								</div>

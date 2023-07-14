@@ -65,7 +65,7 @@ export const FamilyGroupDetails = () => {
 				<div className="row">
 					<h3 className="mt-5 pt-5">{familyGroup && familyGroup.name}</h3>
 					<div className="d-flex flex-row justify-content-between my-2">
-						<p className="fw-bold text-secondary pt-3">Responsáveis Parceiros:</p>
+						<p className="fw-bold text-secondary pt-3">Responsáveis:</p>
 						<Link className="customLink fs-5" to={'/manageguardians/' + id}>
 							Gerenciar Responsáveis
 						</Link>
@@ -73,22 +73,22 @@ export const FamilyGroupDetails = () => {
 					{familyGroup &&
 						familyGroup.dependents.map((dependent) => (
 							<div key={dependent.id}>
-								<p className="fw-bold">Pet: {dependent.name}</p>
+								<p className="fw-bold">Dependente: {dependent.name}</p>
 								{guards[dependent.id] &&
 									guards[dependent.id].map((guard) => (
 										<p key={guard.id} className="my-2">
-											{guard.userName} :{' '}
-											<span>{guardianRoleEnum.find((role) => role.value == guard.userRole).key}</span>
-											{/* <span className="text-primary mx-5">{guard.daysOfWeek}</span> */}
+											{guard.userName}
+
 										</p>
 									))}
 							</div>
 						))}
 				</div>
 				<div className="row">
-					<p className="fw-bold text-secondary my-2">Pets:</p>
+					<p className="fw-bold text-secondary my-2">Dependentes:</p>
 					{familyGroup &&
 						familyGroup.dependents.map((dependent) => (
+							// <p className="fw-bold">{dependent.name}</p>
 							<CardDependents
 								key={dependent.id}
 								dependent={dependent}

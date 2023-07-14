@@ -9,6 +9,9 @@ import { DependentForm } from '../components/DependentForm';
 import { useNavigate } from 'react-router-dom';
 import { guardianRoleEnum } from './ManageGuardians';
 import { SelectInput } from '../components/Inputs/SelectInput';
+import {CheckBoxInput} from "../components/Inputs/CheckBoxInput/index.jsx";
+import {ButtonOutlineSecondary} from "../components/ButtonOutlineSecondary/index.jsx";
+import {CustomLink} from "../components/CustomLink/index.jsx";
 
 export const FamilyGroup = () => {
 	const [familyGroupForm, setfamilyGroupForm] = useState({
@@ -22,7 +25,14 @@ export const FamilyGroup = () => {
 	});
 	const [dependentCount, setDependentCount] = useState(1);
 	const [submit, setSubmit] = useState(false);
-
+	const [guardians, setGuardians] = useState([]);
+	const [selectedGuardians, setSelectedGuardians] = useState([]);
+	const getGuardians = () => {
+		api.get('/user').then((res) => {
+			setGuardians(res.data);
+		});
+	};
+	getGuardians();
 	useEffect(() => {
 		clearValidationFields();
 	}, []);
@@ -108,8 +118,8 @@ export const FamilyGroup = () => {
 	return (
 		<div className="app">
 			<div className="container my-5 text-center custom-card">
-				<h1 className="secondary-color">Bem-vindo!</h1>
-				<p>Vamos iniciar o cadastro do seu grupo familiar</p>
+				<h1 className="secondary-color">Olá!</h1>
+				<p>Vamos iniciar o cadastro do  grupo familiar</p>
 				<div className="row text-start">
 					<div className="col-12">
 						<div className="mt-3">
@@ -120,19 +130,28 @@ export const FamilyGroup = () => {
 								onChange={(e) => updateForm('name', e)}
 							/>
 							{showErrorMessages('name')}
-							<SelectInput
-								options={[
-									{ optName: 'Escolha um papel', optValue: '-1', disabled: true },
-									...guardianRoleEnum.map((role) => {
-										return { optName: role.key, optValue: role.value.toString() };
-									}),
-								]}
-								value={familyGroupForm.userRole}
-								label="Papel do responsável"
-								onChange={(e) => updateForm('userRole', e)}
-							/>
-							<h5 className="text-center mt-5 text-secondary">Cadastro de pet(s)</h5>
-
+							<h5 className="text-center mt-5 text-secondary">Cadastro de responsáveis</h5>
+							<h6 className="p text-center text-muted">Selecione os responsáveis que fazem parte deste grupo </h6>
+							{guardians.map((guardian) => (
+								<CheckBoxInput
+									key={guardian.id}
+									value={guardian.name}
+									onChange={(e) => {
+										if (e.target.checked) {
+											setSelectedGuardians([...selectedGuardians, guardian.id]);
+										} else {
+											setSelectedGuardians(selectedGuardians.filter((id) => id !== guardian.id));
+										}
+									}}
+								/>
+							))}
+							<div className="row">
+								<div className="col-6 pt-3">
+									<CustomLink text="Cadastrar Novo Responsável + " to="/signup" />
+								</div>
+							</div>
+							<h5 className="text-center mt-5 text-secondary">Cadastro de dependente(s)</h5>
+							<h6 className="p text-center text-muted">Acrescente os dependentes deste grupo</h6>
 							<div className="my-3 text-start">
 								{Array.from({ length: dependentCount }).map((_, index) => (
 									<DependentForm
@@ -143,7 +162,7 @@ export const FamilyGroup = () => {
 										key={'kdf' + index}
 									/>
 								))}
-								<ButtonOutline onClick={() => setDependentCount((ps) => ps + 1)} text="Adicionar pet +" />
+								<ButtonOutline onClick={() => setDependentCount((ps) => ps + 1)} text="Adicionar dependente +" />
 							</div>
 							<Button onClick={submitFamilyGroupForm} text="Finalizar Cadastro" />
 						</div>

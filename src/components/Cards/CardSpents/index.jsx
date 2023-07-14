@@ -11,7 +11,7 @@ export const CardSpents = ({ spent, deleteSpent }) => {
 						<h5 className="fw-bold">{spent.name}</h5>
 					</div>
 					<div className="card-body">
-						<h5 className="card-title text-secondary">Pet:</h5>
+						<h5 className="card-title text-secondary">Estudante:</h5>
 						<p>{spent.dependentName}</p>
 						<h5 className="card-title text-secondary">Valor gasto:</h5>
 						<p>R$ {(spent.value / 100).toFixed(2).replace('.', ',')}</p>

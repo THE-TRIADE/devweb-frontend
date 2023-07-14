@@ -47,6 +47,7 @@ export const Home = () => {
 				<div className="row">
 					{familyGroups.map((familyGroup) => (
 						<CardFamilyGroup
+							href="/familyGroupDetails/"
 							key={familyGroup.id}
 							familyGroup={familyGroup}
 							deleteFunction={(e) => deleteFamilyGroup(e, familyGroup.id)}
