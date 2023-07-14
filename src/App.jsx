@@ -9,6 +9,8 @@ import { Spents } from './pages/Spents';
 import { Classes } from './pages/Classes';
 import { FamilyGroupDetails } from './pages/FamilyGroupDetails';
 import { ManageGuardians } from './pages/ManageGuardians';
+import { ClassesForm } from './pages/ClassesForm';
+import { ClassesDetails } from './pages/ClassesDetails';
 import { DependentActivities } from './pages/DependentActivities';
 import { SpentsReports } from './pages/SpentsReport';
 
@@ -23,6 +25,8 @@ function App() {
 				<Route path="/signup" element={<SignUp />} />
 				<Route path="/manageguardians/:id" element={<ManageGuardians />} />
 				<Route path="/spents" element={<Spents />} />
+				<Route path="/classesForm" element={<ClassesForm />} />
+				<Route path="/classesDetails/:id" element={<ClassesDetails />} />
 				<Route path="/classes" element={<Classes />} />
 				<Route path="/spentsreport" element={<SpentsReports />} />
 				<Route path="/login" element={<SignIn />} />

@@ -74,11 +74,12 @@ export const Classes = () => {
 				)}
 				<div className="my-5 pt-5 d-flex flex-column flex-sm-row justify-content-between">
 					<h3 className="pt-3">Turmas</h3>
-					<ButtonOutlineSecondary text="Cadastrar Grupo Familiar" link="/familygroup" />
+					<ButtonOutlineSecondary text="Cadastrar Turma" link="/classesForm" />
 				</div>
 				<div className="row">
 					{familyGroups.map((familyGroup) => (
 						<CardFamilyGroup
+							href="/classesDetails/"
 							key={familyGroup.id}
 							familyGroup={familyGroup}
 							deleteFunction={(e) => deleteFamilyGroup(e, familyGroup.id)}
