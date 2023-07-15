@@ -3,58 +3,65 @@ import { Button } from '../components/Button';
 import { CustomSpan } from '../components/CustomSpan';
 import { TextualInput } from '../components/Inputs/TextualInput';
 
-import { api } from '../config/api';
-import { ButtonOutline } from '../components/ButtonOutline';
-import { DependentForm } from '../components/DependentForm';
 import { useNavigate } from 'react-router-dom';
-import { guardianRoleEnum } from './ManageGuardians';
-import { SelectInput } from '../components/Inputs/SelectInput';
-import {CheckBoxInput} from "../components/Inputs/CheckBoxInput/index.jsx";
-import {ButtonOutlineSecondary} from "../components/ButtonOutlineSecondary/index.jsx";
-import {CustomLink} from "../components/CustomLink/index.jsx";
+import { CustomLink } from '../components/CustomLink/index.jsx';
+import { CheckBoxInput } from '../components/Inputs/CheckBoxInput/index.jsx';
+import { api } from '../config/api';
 
 export const ClassesForm = () => {
 	const [familyGroupForm, setfamilyGroupForm] = useState({
 		name: '',
 		userId: sessionStorage.getItem('UserId'),
-		userRole: '-1',
+		userRole: null,
 	});
 	const [dependents, setDependents] = useState([]);
-	const [students, setStudents] = useState([]);
+	const [allDependents, setAllDependents] = useState([]);
 	const [errorMessages, setErrorMessages] = useState({
 		name: null,
 	});
-	const [dependentCount, setDependentCount] = useState(1);
+	// const [dependentCount, setDependentCount] = useState(1);
+
+	const [allUsers, setAllUsers] = useState([]);
+	const [users, setUsers] = useState([]);
+
 	const [submit, setSubmit] = useState(false);
-	const [guardians, setGuardians] = useState([]);
-	const [selectedGuardians, setSelectedGuardians] = useState([]);
-	const [selectedStudents, setSelectedStudents] = useState([]);
-	const getGuardians = () => {
+
+	const getAllUsers = () => {
 		api.get('/user').then((res) => {
-			setGuardians(res.data);
+			const usersResponse = res.data;
+			res.data.forEach((x) => {
+				delete x.groups;
+				delete x.relations;
+				delete x.role;
+			});
+			setAllUsers(usersResponse);
 		});
 	};
-	getGuardians();
-	const getStudents = () => {
+
+	const getAllDependents = () => {
 		api.get('/dependent').then((res) => {
-			setStudents(res.data);
+			setAllDependents(res.data);
 		});
 	};
-	getStudents();
+
 	useEffect(() => {
 		clearValidationFields();
+		getAllUsers();
+		getAllDependents();
 	}, []);
 
 	useEffect(() => {
 		console.log('Dependents', dependents);
 	}, [dependents]);
 
-	useEffect(() => {
-		if (dependents.length > dependentCount) {
-			setDependents((ps) => [...ps.slice(0, -1)]);
-		}
-	}, [dependentCount]);
+	// useEffect(() => {
+	// 	if (dependents.length > dependentCount) {
+	// 		setDependents((ps) => [...ps.slice(0, -1)]);
+	// 	}
+	// }, [dependentCount]);
+
 	const navigate = useNavigate();
+
 	useEffect(() => {
 		if (submit) {
 			const newErrors = validateForm();
@@ -66,7 +73,7 @@ export const ClassesForm = () => {
 			});
 
 			if (isValid) {
-				const newFamilyGroup = { ...familyGroupForm, dependents };
+				const newFamilyGroup = { ...familyGroupForm, dependents, users };
 				api
 					.post('/group-user-dependent', newFamilyGroup)
 					.then(() => {
@@ -112,16 +119,16 @@ export const ClassesForm = () => {
 		}
 	};
 
-	const updateDependent = (newDependent, index) => {
-		setDependents((ps) => {
-			if (index >= 0 && index < ps.length) {
-				ps[index] = newDependent;
-			} else {
-				ps.push(newDependent);
-			}
-			return [...ps];
-		});
-	};
+	// const updateDependent = (newDependent, index) => {
+	// 	setDependents((ps) => {
+	// 		if (index >= 0 && index < ps.length) {
+	// 			ps[index] = newDependent;
+	// 		} else {
+	// 			ps.push(newDependent);
+	// 		}
+	// 		return [...ps];
+	// 	});
+	// };
 
 	return (
 		<div className="app">
@@ -140,15 +147,15 @@ export const ClassesForm = () => {
 							{showErrorMessages('name')}
 							<h5 className="text-center mt-5 text-secondary">Cadastro de professores</h5>
 							<h6 className="p text-center text-muted">Selecione os professores que fazem parte desta turma </h6>
-							{guardians.map((guardian) => (
+							{allUsers.map((user) => (
 								<CheckBoxInput
-									key={guardian.id}
-									value={guardian.name}
+									key={user.id}
+									value={user.name}
 									onChange={(e) => {
 										if (e.target.checked) {
-											setSelectedGuardians([...selectedGuardians, guardian.id]);
+											setUsers([...users, user]);
 										} else {
-											setSelectedGuardians(selectedGuardians.filter((id) => id !== guardian.id));
+											setUsers(users.filter((userInList) => userInList.id !== user.id));
 										}
 									}}
 								/>
@@ -161,15 +168,15 @@ export const ClassesForm = () => {
 							<h5 className="text-center mt-5 text-secondary">Cadastro de aluno(s)</h5>
 							<h6 className="p text-center text-muted">Acrescente os alunos desta turma</h6>
 							<div className="mb-3 text-start">
-								{students.map((student) => (
+								{allDependents.map((dependent) => (
 									<CheckBoxInput
-										key={student.id}
-										value={student.name}
+										key={dependent.id}
+										value={dependent.name}
 										onChange={(e) => {
 											if (e.target.checked) {
-												setSelectedStudents([...setSelectedStudents, student.id]);
+												setDependents([...dependents, dependent]);
 											} else {
-												setSelectedStudents(setSelectedStudents.filter((id) => id !== student.id));
+												setDependents(dependents.filter((dependentInList) => dependentInList !== dependent.id));
 											}
 										}}
 									/>

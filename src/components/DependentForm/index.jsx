@@ -1,14 +1,13 @@
-import { useState, useEffect } from 'react';
-import { DateInput } from '../Inputs/DateInput';
-// import { CpfInput } from '../Inputs/CpfInput';
-import { TextualInput } from '../Inputs/TextualInput';
-import { ButtonOutline } from '../ButtonOutline';
 import PropTypes from 'prop-types';
+import { useEffect, useState } from 'react';
+import { ButtonOutline } from '../ButtonOutline';
+import { CpfInput } from '../Inputs/CpfInput';
+import { TextualInput } from '../Inputs/TextualInput';
 export const DependentForm = ({ counter, updateDependent, updateDependentCount }) => {
 	const [dependent, setDependent] = useState({
 		name: '',
-		birthDate: '',
-		race: '',
+		registrationNumber: '',
+		cpf: '',
 	});
 
 	const updateForm = (inputName, event) => {
@@ -37,14 +36,14 @@ export const DependentForm = ({ counter, updateDependent, updateDependentCount }
 			<TextualInput
 				placeholder="Matrícula"
 				label="Matrícula do dependente"
-				value={dependent.race}
-				onChange={(e) => updateForm('race', e)}
+				value={dependent.registrationNumber}
+				onChange={(e) => updateForm('registrationNumber', e)}
 			/>
-			<DateInput
-				label="Data de Nascimento"
-				placeholder="00/00/0000"
-				value={dependent.birthDate}
-				onChange={(e) => updateForm('birthDate', e)}
+			<CpfInput
+				placeholder="CPF"
+				label="CPF do dependente"
+				value={dependent.cpf}
+				onChange={(e) => updateForm('cpf', e)}
 			/>
 		</>
 	);

@@ -1,18 +1,16 @@
 import { useEffect, useState } from 'react';
 import { Button } from '../components/Button';
-import { PasswordLoginInput } from '../components/LoginInputs/PasswordLoginInput';
-import { TextualLoginInput } from '../components/LoginInputs/TextualLoginInput';
-import { EmailLoginInput } from '../components/LoginInputs/EmailLoginInput';
-import { DateLoginInput } from '../components/LoginInputs/DateLoginInput';
-import { CpfLoginInput } from '../components/LoginInputs/CpfLoginInput';
 import { CustomLink } from '../components/CustomLink';
 import { CustomSpan } from '../components/CustomSpan';
+import { CpfLoginInput } from '../components/LoginInputs/CpfLoginInput';
+import { DateLoginInput } from '../components/LoginInputs/DateLoginInput';
+import { EmailLoginInput } from '../components/LoginInputs/EmailLoginInput';
+import { PasswordLoginInput } from '../components/LoginInputs/PasswordLoginInput';
+import { TextualLoginInput } from '../components/LoginInputs/TextualLoginInput';
 
-import { api } from '../config/api';
 import { useNavigate } from 'react-router-dom';
-import { FooterWave } from '../components/FooterWave';
-import {SelectInput} from "../components/Inputs/SelectInput/index.jsx";
-import {SelectLoginInput} from "../components/LoginInputs/SelectLoginInput/index.jsx";
+import { SelectLoginInput } from '../components/LoginInputs/SelectLoginInput/index.jsx';
+import { api } from '../config/api';
 export const guardianRoleEnum = [
 	{ key: 'Responsável', value: 'GUARDIAN' },
 	{ key: 'Diretor', value: 'PRINCIPAL' },
