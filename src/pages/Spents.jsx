@@ -9,6 +9,7 @@ import { api } from '../config/api';
 import { Button } from '../components/Button';
 import { Menu } from '../components/Menu';
 import { Link } from 'react-router-dom';
+import {verifyPermission} from "../utils/permissions.js";
 
 export const Spents = () => {
 	const [sentForm, setSentForm] = useState({
@@ -20,13 +21,40 @@ export const Spents = () => {
 		activityId: '',
 	});
 	const [spents, setSpents] = useState([]);
+	const [spentsPrincipal, setSpentsPrincipal] = useState([]);
 	const [dependents, setDependents] = useState([
 		{
 			dependentName: '',
 			dependentId: '',
 		},
 	]);
+	const [dependentsPrincipal, setDependentsPrincipal] = useState([]);
+	const [permissionType, setPermissionType] = useState('NONE');
+	const [permissionTypeV, setPermissionTypeV] = useState('NONE');
 
+	const role = sessionStorage.getItem('role');
+	useEffect(() => {
+		const hasWritePermission = verifyPermission(role, 'GASTO', true);
+		const hasReadPermission = verifyPermission(role, 'GASTO');
+		const hasWritePermissionV = verifyPermission(role, 'LISTAR TODOS GASTO', true);
+		const hasReadPermissionV  = verifyPermission(role, 'LISTAR TODOS GASTO');
+
+		if (hasWritePermission) {
+			setPermissionType('READ/WRITE');
+		} else if (hasReadPermission) {
+			setPermissionType('READ-ONLY');
+		} else {
+			setPermissionType('NONE');
+		}
+
+		if (hasWritePermissionV) {
+			setPermissionTypeV('READ/WRITE');
+		} else if (hasReadPermissionV) {
+			setPermissionTypeV('READ-ONLY');
+		} else {
+			setPermissionTypeV('NONE');
+		}
+	}, []);
 	const updateForm = (inputName, event) => {
 		setSentForm((prevState) => {
 			return { ...prevState, [inputName]: event.target.value };
@@ -56,6 +84,11 @@ export const Spents = () => {
 				setSpents(res.data);
 			});
 		};
+		const getSpentsPrincipal = () => {
+			api.get('/spent').then((res) => {
+				setSpentsPrincipal(res.data);
+			});
+		};
 		const getDependents = () => {
 			api.get('/user/' + sessionStorage.getItem('UserId')).then((res) => {
 				const listDependent = res.data.relations.map((relation) => {
@@ -67,8 +100,15 @@ export const Spents = () => {
 				setDependents(listDependent);
 			});
 		};
+		const getDependentsPrincipal = () => {
+			api.get('/dependent').then((res) => {
+				setDependentsPrincipal(res.data);
+			});
+		};
 		getSpents();
 		getDependents();
+		getDependentsPrincipal();
+		getSpentsPrincipal()
 		return () => {
 			modalElement.removeEventListener('hidden.bs.modal', handleFormSubmit);
 		};
@@ -85,7 +125,6 @@ export const Spents = () => {
 				.catch((err) => console.error(err))
 				.finally(() => {
 					setTrySubmit(false);
-					getRecommendations();
 				});
 		}
 	}, [trySubmit]);
@@ -99,7 +138,6 @@ export const Spents = () => {
 		api.delete(`/spent/${id}`).then(() => {
 			setSpents((oldList) => oldList.filter((spent) => spent.id != id));
 		}).finally(() => {
-			getRecommendations();
 		});
 	};
 
@@ -108,14 +146,26 @@ export const Spents = () => {
 			<Menu />
 			<div className="row">
 				<div className="col-12">
-					<TitlePages text="Gastos" textButton="Cadastrar Gasto" target="#ModalCadastrarGasto" />
+					{permissionType != 'READ-ONLY' && (
+						<TitlePages text="Gastos" textButton="Cadastrar Gasto" target="#ModalCadastrarGasto" />
+					)}
+					{permissionType == 'READ-ONLY' && (
+						<h3 className=" my-5 pt-5">Gastos</h3>
+					)}
 					<div className="row">
 						<Link className="customLink my-3 text-secondary text-end fs-5" to={'/spentsreport'}>
 							Ver resumo de gastos
 						</Link>
-						{spents.map((spent) => (
-							<CardSpents key={spent.id} spent={spent} deleteSpent={deleteSpent} />
-						))}
+
+						{permissionTypeV != 'NONE' ? (
+							spentsPrincipal.map((spent) => (
+									<CardSpents key={spent.id} spent={spent} deleteSpent={deleteSpent} />
+								))
+						) : (
+							spents.map((spent) => (
+								<CardSpents key={spent.id} spent={spent} deleteSpent={deleteSpent} />
+							))
+						)}
 					</div>
 					<div
 						className="modal fade"
@@ -154,17 +204,30 @@ export const Spents = () => {
 										value={sentForm.paidOn}
 										onChange={(e) => updateForm('paidOn', e)}
 									/>
-									<SelectInput
+									{permissionTypeV != 'NONE' ?
+										<SelectInput
 										options={[
 											{ optName: 'Escolha um estudante', optValue: '-1', disabled: true },
-											...dependents.map((dependent) => {
-												return { optName: dependent.dependentName, optValue: dependent.dependentId.toString() };
+											...dependentsPrincipal.map((dependent) => {
+												return { optName: dependent.name, optValue: dependent.id.toString() };
 											}),
 										]}
 										value={sentForm.dependentId}
 										label="Estudante"
 										onChange={(e) => updateForm('dependentId', e)}
-									/>
+									/> :
+										<SelectInput
+											options={[
+												{ optName: 'Escolha um estudante', optValue: '-1', disabled: true },
+												...dependents.map((dependent) => {
+													return { optName: dependent.dependentName, optValue: dependent.dependentId.toString() };
+												}),
+											]}
+											value={sentForm.dependentId}
+											label="Estudante"
+											onChange={(e) => updateForm('dependentId', e)}
+										/>
+									}
 								</div>
 								<div className="modal-footer" data-dismiss="ModalCadastrarGasto">
 									<Button type="button" text="Cadastrar" onClick={submitSpent} />

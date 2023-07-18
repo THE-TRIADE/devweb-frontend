@@ -1,8 +1,24 @@
 import PropTypes from 'prop-types';
 import '../styles.css';
 import { ButtonAction } from '../../ButtonAction';
+import {useEffect, useState} from "react";
+import {verifyPermission} from "../../../utils/permissions.js";
 
 export const CardSpents = ({ spent, deleteSpent }) => {
+	const [permissionType, setPermissionType] = useState('NONE');
+	const role = sessionStorage.getItem('role');
+	useEffect(() => {
+		const hasWritePermission = verifyPermission(role, 'GASTO', true);
+		const hasReadPermission = verifyPermission(role, 'GASTO');
+
+		if (hasWritePermission) {
+			setPermissionType('READ/WRITE');
+		} else if (hasReadPermission) {
+			setPermissionType('READ-ONLY');
+		} else {
+			setPermissionType('NONE');
+		}
+	}, []);
 	return (
 		<div className="col-12 col-md-4 mb-3 mb-md-0 mt-3">
 			<a href="" className="text-decoration-none">
@@ -25,9 +41,11 @@ export const CardSpents = ({ spent, deleteSpent }) => {
 								<p>{spent.activityName}</p>
 							</>
 						)}
-						<div className="text-end mb-2 me-2">
-							<ButtonAction text="Excluir" bgColor="bg-danger" onClick={(e) => deleteSpent(spent.id, e)} />
-						</div>
+						{permissionType != 'READ-ONLY' && (
+							<div className="text-end mb-2 me-2">
+								<ButtonAction text="Excluir" bgColor="bg-danger" onClick={(e) => deleteSpent(spent.id, e)} />
+							</div>
+						)}
 					</div>
 				</div>
 			</a>
