@@ -16,6 +16,8 @@ export const guardianRoleEnum = [
 	{ key: 'Mãe', value: 'MOTHER' },
 	{ key: 'Parente', value: 'RELATIVE' },
 	{ key: 'Provisório', value: 'TEMPORARY' },
+	{ key: 'Professor', value: 'TEACHER' },
+	{ key: 'Diretor', value: 'PRINCIPAL' },
 ];
 
 export const dayOfWeekEnum = [
@@ -38,7 +40,7 @@ export const ManageGuardians = () => {
 		daysOfWeek: [],
 		userRole: '-1',
 		dependentId: '-1',
-		userId: sessionStorage.getItem('UserId'),
+		userId: '-1',
 	});
 	const [guardians, setGuardians] = useState([]);
 	const [trySubmit, setTrySubmit] = useState(false);
@@ -49,8 +51,8 @@ export const ManageGuardians = () => {
 		});
 	};
 
-	const getGuardians = () => {
-		api.get('/user').then((res) => {
+	const getGuardians = (role) => {
+		api.get('/user?role='+ role).then((res) => {
 			setGuardians(res.data);
 		});
 	};
@@ -62,7 +64,7 @@ export const ManageGuardians = () => {
 	};
 
 	useEffect(() => {
-		getGuardians();
+		getGuardians('RELATIVE');
 
 		const getGuards = (dependentId) => {
 			api.get('/relation/by-dependent-id/' + dependentId).then((res) => {
@@ -104,7 +106,7 @@ export const ManageGuardians = () => {
 						daysOfWeek: [],
 						userRole: '-1',
 						dependentId: '-1',
-						userId: sessionStorage.getItem('UserId'),
+						userId: '-1',
 					});
 
 					setTrySubmit(false);
@@ -149,10 +151,10 @@ export const ManageGuardians = () => {
 														<p>
 															<span className="fw-bold text-secondary">Dependente:</span> {guard.dependentName}
 														</p>
-														<p>
-															<span className="fw-bold text-secondary">Papel no grupo familiar: </span>
-															{guardianRoleEnum.find((role) => role.value == guard.userRole).key}
-														</p>
+														{/*<p>*/}
+														{/*	<span className="fw-bold text-secondary">Papel no grupo familiar: </span>*/}
+														{/*	{guardianRoleEnum.find((role) => role.value == guard.userRole).key}*/}
+														{/*</p>*/}
 														{guard.daysOfWeek != null && !!guard.daysOfWeek.length && (
 															<p>
 																<span className="fw-bold text-secondary">Dias da semana: </span>
