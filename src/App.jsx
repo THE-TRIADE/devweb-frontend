@@ -13,6 +13,7 @@ import { ClassesForm } from './pages/ClassesForm';
 import { ClassesDetails } from './pages/ClassesDetails';
 import { DependentActivities } from './pages/DependentActivities';
 import { SpentsReports } from './pages/SpentsReport';
+import {DependentActivitiesFamilyGroup} from "./pages/DependentActivitiesFamilyGroup.jsx";
 
 function App() {
 	return (
@@ -20,6 +21,7 @@ function App() {
 			<Routes>
 				<Route path="/familygroup" element={<FamilyGroup />} />
 				<Route path="/dependentactivities/:id" element={<DependentActivities />} />
+				<Route path="/dependentactivitiesfamily/:id" element={<DependentActivitiesFamilyGroup />} />
 				<Route path="/familygroupdetails/:id" element={<FamilyGroupDetails />} />
 				<Route path="/" element={<Home />} />
 				<Route path="/signup" element={<SignUp />} />
