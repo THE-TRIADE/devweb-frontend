@@ -2,6 +2,7 @@ import { useCallback, useState } from 'react';
 import { CardFamilyGroup } from '../components/Cards/CardFamilyGroup';
 import { api } from '../config/api';
 import { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { ButtonOutlineSecondary } from '../components/ButtonOutlineSecondary';
 import { Menu } from '../components/Menu';
 
@@ -12,6 +13,14 @@ export const Home = () => {
 		api.get('/user/' + id).then((res) => {
 			setFamilyGroups(res.data.groups);
 		});
+	}, []);
+
+	const navigate = useNavigate();
+
+	useEffect(() => {
+		if (sessionStorage.getItem('UserId') == null) {
+			navigate('/login');
+		}
 	}, []);
 
 	useEffect(() => {
