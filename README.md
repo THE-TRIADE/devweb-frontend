@@ -42,7 +42,16 @@ sudo apt-get install -y nodejs
 
 Clonar o repositório a partir da branch develop:
 ```bash
-git clone https://github.com/THE-TRIADE/frontend.git -b develop
+git clone https://github.com/THE-TRIADE/devweb-frontend.git
+```
+
+Selecionar a branch equivalente à instância que quer usar. Aqui estão as três opções válidas:
+```bash
+git checkout front-familyRoutine
+
+git checkout front-petRoutine
+
+git checkout front-studentRoutine
 ```
 
 Após, baixar as dependências do projeto:
@@ -51,10 +60,16 @@ Após, baixar as dependências do projeto:
 npm install
 ```
 
-Após, rodar o servidor de desenvolvimento:
+Após, buildar o projeto:
 
 ```bash
-npm run dev
+npm run build
+```
+
+Por fim, rodar o projeto:
+
+```bash
+npm run preview
 ```
 
 ## Documentação oficial do React.js
