@@ -4,6 +4,7 @@ import { api } from '../config/api';
 import { useEffect } from 'react';
 import { ButtonOutlineSecondary } from '../components/ButtonOutlineSecondary';
 import { Menu } from '../components/Menu';
+import { useNavigate } from 'react-router-dom';
 
 export const Home = () => {
 	const [familyGroups, setFamilyGroups] = useState([]);
@@ -15,6 +16,15 @@ export const Home = () => {
 			setFamilyGroups(res.data.groups);
 		});
 	}, []);
+
+	const navigate = useNavigate();
+
+	useEffect(() => {
+		if (sessionStorage.getItem('UserId') == null) {
+			navigate('/login');
+		}
+	}, []);
+
 	const sortearIdDependente = () => {
 		const randomIndex = Math.floor(Math.random() * dependents.length);
 		const dependenteSorteado = dependents[randomIndex];
@@ -41,7 +51,7 @@ export const Home = () => {
 		if (dependents.length) {
 			getRecommendations();
 		}
-	}, [dependents])
+	}, [dependents]);
 
 	useEffect(() => {
 		getAllFamilyGroups();
@@ -58,19 +68,19 @@ export const Home = () => {
 			<Menu />
 			<div className="container">
 				{recommendations.length != 0 && (
-						<div className="row pt-5 mt-5">
-					<div className="p-3 bg-warning bg-opacity-50 border border-warning fw-semibold border-opacity-50 rounded-3">
-						{recommendations.length > 1 ? (
-							<p className="p-0 m-0">{recommendations[randomIndex]}</p>
-						) : (
-							recommendations.map((recommendation, index) => (
-								<p className="p-0 m-0" key={index}>
-									{recommendation}
-								</p>
-							))
-						)}
+					<div className="row pt-5 mt-5">
+						<div className="p-3 bg-warning bg-opacity-50 border border-warning fw-semibold border-opacity-50 rounded-3">
+							{recommendations.length > 1 ? (
+								<p className="p-0 m-0">{recommendations[randomIndex]}</p>
+							) : (
+								recommendations.map((recommendation, index) => (
+									<p className="p-0 m-0" key={index}>
+										{recommendation}
+									</p>
+								))
+							)}
+						</div>
 					</div>
-				</div>
 				)}
 				<div className="my-5 pt-5 d-flex flex-column flex-sm-row justify-content-between">
 					<h3 className="pt-3">Grupos Familiares</h3>

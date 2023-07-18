@@ -44,7 +44,10 @@ export const SignIn = () => {
 						sessionStorage.setItem('UserId', res.data.id);
 						navigate('/');
 					})
-					.catch((err) => console.error(err));
+					.catch((err) => {
+						console.error(err);
+						setTrySignUp(false);
+					});
 			} else {
 				setTrySignUp(false);
 			}
