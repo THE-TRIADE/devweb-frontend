@@ -25,6 +25,6 @@ SelectInput.propTypes = {
 			disabled: PropTypes.bool,
 		}),
 	).isRequired,
-	value: PropTypes.string.isRequired,
+	value: PropTypes.string,
 	onChange: PropTypes.func.isRequired,
 };
