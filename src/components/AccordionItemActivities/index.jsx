@@ -2,8 +2,25 @@ import PropTypes from 'prop-types';
 import './styles.css';
 import { ButtonAction } from '../ButtonAction';
 import { ButtonHeader } from '../ButtonHeader';
+import {useEffect, useState} from "react";
+import {verifyPermission} from "../../utils/permissions.js";
 
 export const AccordionActivities = ({ activity, parent, deleteFunction, target, funcOnClickFinish }) => {
+	const [permissionType, setPermissionType] = useState('NONE');
+
+	const role = sessionStorage.getItem('role');
+	useEffect(() => {;
+		const hasWritePermission = verifyPermission(role, 'LISTAR TODOS GASTO', true);
+		const hasReadPermission  = verifyPermission(role, 'LISTAR TODOS GASTO');
+
+		if (hasWritePermission) {
+			setPermissionType('READ/WRITE');
+		} else if (hasReadPermission) {
+			setPermissionType('READ-ONLY');
+		} else {
+			setPermissionType('NONE');
+		}
+	}, []);
 	return (
 		<div className="accordion-item">
 			<h2 className="accordion-header" id={'heading' + activity.id}>
@@ -15,7 +32,7 @@ export const AccordionActivities = ({ activity, parent, deleteFunction, target, 
 					aria-expanded="false"
 					aria-controls={'collapse' + activity.id}
 				>
-					<span className="badge rounded-pill border border-info text-info me-2">{activity.categoryName}</span>
+					<span className="badge rounded-pill border border-info text-info me-2">{activity.courseName}</span>
 					{activity.name}
 				</button>
 			</h2>
@@ -52,9 +69,13 @@ export const AccordionActivities = ({ activity, parent, deleteFunction, target, 
 							Comentário: <span className="text-dark fw-normal">{activity.commentary}</span>
 						</p>
 					)}
-
+						<p className=" fw-bold text-primary">
+							Nota: <span className="text-dark fw-normal">{activity.grade}</span>
+						</p>
 					<div className="text-end">
-						<ButtonAction text="Excluir" bgColor="bg-danger" onClick={(e) => deleteFunction(e, activity.id)} />
+						{permissionType == 'READ/WRITE' &&
+							<ButtonAction text="Excluir" bgColor="bg-danger" onClick={(e) => deleteFunction(e, activity.id)} />
+						}
 						{target != null && (
 							<ButtonHeader
 								text="Finalizar Atividade"

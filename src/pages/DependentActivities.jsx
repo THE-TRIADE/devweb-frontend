@@ -13,6 +13,7 @@ import { CheckBoxInput } from '../components/Inputs/CheckBoxInput';
 import { CheckBoxGroupInput } from '../components/Inputs/CheckBoxGroupInput';
 import { dayOfWeekEnum } from './ManageGuardians';
 import { Button } from '../components/Button';
+import {verifyPermission} from "../utils/permissions.js";
 export const ActivityStateEnum = {
 	created: 'CRIADA',
 	in_progress: 'EM_ANDAMENTO',
@@ -43,7 +44,7 @@ export const DependentActivities = () => {
 	const { id } = useParams();
 	const [activities, setActivities] = useState([]);
 	const [categories, setCategories] = useState([]);
-	const [dependent, setDependent] = useState({});
+	const [dependent, setDependent] = useState(null);
 	const [guardians, setGuardians] = useState([]);
 	const [submitActivity, setSubmitActivity] = useState(false);
 	const [sentForm, setSentForm] = useState({
@@ -61,6 +62,10 @@ export const DependentActivities = () => {
 		repeatUntil: '',
 		courseId: '-1',
 	});
+	const [submitCourse, setSubmitCourse] = useState(false);
+	const [sentCourse, setSentCourse] = useState({
+		name: '',
+	});
 	const [finishActivityId, setFinishActivityId] = useState(0);
 	const [sentFinishForm, setSentFinishForm] = useState({
 		userId: sessionStorage.getItem('UserId'),
@@ -68,7 +73,21 @@ export const DependentActivities = () => {
 		commentary: '',
 	});
 	const [trySubmitFinishForm, setTrySubmitFinishForm] = useState(false);
+	const [permissionCategoriaType, setPermissionCategoriaType] = useState('NONE');
 
+	const role = sessionStorage.getItem('role');
+	useEffect(() => {
+		const hasWritePermissionCategoria = verifyPermission(role, 'CATEGORIA', true);
+		const hasReadPermissionCategoria = verifyPermission(role, 'CATEGORIA');
+
+		if (hasWritePermissionCategoria) {
+			setPermissionCategoriaType('READ/WRITE');
+		} else if (hasReadPermissionCategoria) {
+			setPermissionCategoriaType('READ-ONLY');
+		} else {
+			setPermissionCategoriaType('NONE');
+		}
+	}, []);
 	const updateForm = (inputName, event) => {
 		const { checked, value } = event.target;
 
@@ -78,6 +97,13 @@ export const DependentActivities = () => {
 			} else {
 				return { ...prevState, [inputName]: value };
 			}
+		});
+	};
+	const updateFormCourse = (inputName, event) => {
+		const { checked, value } = event.target;
+
+		setSentCourse((prevState) => {
+				return { ...prevState, [inputName]: value };
 		});
 	};
 	const getActivitiesByCategoryIdDependentId = (dependentId,courseId) => {
@@ -98,6 +124,12 @@ export const DependentActivities = () => {
 		});
 	};
 
+	const getCategories = () => {
+		api.get('/course').then((res) => {
+			setCategories(res.data);
+		});
+	};
+
 	useEffect(() => {
 		getDependent(id).then((dependentResult) => {
 			setDependent(dependentResult);
@@ -113,11 +145,6 @@ export const DependentActivities = () => {
 		});
 	}, [id]);
 	useEffect(() => {
-		const getCategories = () => {
-			api.get('/course').then((res) => {
-				setCategories(res.data);
-			});
-		};
 		getCategories();
 	}, []);
 	useEffect(() => {
@@ -160,15 +187,38 @@ export const DependentActivities = () => {
 				});
 		}
 	}, [submitActivity]);
-
+	useEffect(() => {
+		if (submitCourse) {
+			const newCourse = { ...sentCourse};
+			api
+				.post('/course', newCourse)
+				.then((res) => getCategories())
+				.catch((err) => console.error(err))
+				.finally(() => {
+					setSentCourse({
+						name: '',
+					});
+					setSubmitCourse(false);
+				});
+		}
+	}, [submitCourse]);
 	const submitActivityForm = () => {
 		setSubmitActivity(true);
 	};
-
+	const submitCourseForm = () => {
+		setSubmitCourse(true);
+	};
 	const deleteActivityFunction = (e, activityId) => {
 		e.preventDefault();
 		api.delete(`/activity/${activityId}`).then(() => {
 			setActivities((oldList) => oldList.filter((activity) => activity.id != activityId));
+		});
+	};
+
+	const deleteCourseFunction = (e, courseId) => {
+		e.preventDefault();
+		api.delete(`/course/${courseId}`).then(() => {
+			setCategories((oldList) => oldList.filter((category) => category.id != courseId));
 		});
 	};
 
@@ -192,6 +242,7 @@ export const DependentActivities = () => {
 						userId: sessionStorage.getItem('UserId'),
 						done: false,
 						commentary: '',
+						grade:'',
 					});
 				});
 		}
@@ -487,6 +538,12 @@ export const DependentActivities = () => {
 										onChange={(e) => updateFinishForm('done', e)}
 									/>
 									<TextualInput
+										placeholder="Nota"
+										label="Nota da Atividade"
+										value={sentFinishForm.grade}
+										onChange={(e) => updateFinishForm('grade', e)}
+									/>
+									<TextualInput
 										placeholder="Comentário"
 										label="Comentário"
 										value={sentFinishForm.commentary}
@@ -502,7 +559,6 @@ export const DependentActivities = () => {
 				)}
 				{/* MODAL DE FINISH ACTIVITY FIM */}
 				{/* MODAL DE GERENCIAR ACTIVITY INICIO */}
-				{!!activities.length && (
 					<div
 						className="modal fade"
 						id="ModalGerenciarAtividades"
@@ -528,6 +584,9 @@ export const DependentActivities = () => {
 
 															<tr>
 																<th scope="col">Disciplina</th>
+																{permissionCategoriaType != 'READ-ONLY' && (
+																	<th scope="col">Ação</th>
+																)}
 															</tr>
 															</thead>
 															<tbody>
@@ -535,7 +594,9 @@ export const DependentActivities = () => {
 																return (
 																	<tr key={category.id}>
 																		<td>{category.name}</td>
-																		<td className="d-none"><a className="text-danger fw-bold text-decoration-none" role="button">Excluir</a></td>
+																		{permissionCategoriaType != 'READ-ONLY' && (
+																			<td><a className="text-danger fw-bold text-decoration-none" onClick={(e) => deleteCourseFunction(e, category.id)} role="button">Excluir</a></td>
+																		)}
 																	</tr>
 																);
 															})}
@@ -543,54 +604,53 @@ export const DependentActivities = () => {
 														</table>
 													</div>
 									</div>
-									<div className="text-end">
+									{permissionCategoriaType != 'READ-ONLY' && (
+										<div className="text-end">
 										<button className="buttonHeader my-2 bg-info" data-bs-toggle="modal"
 														data-bs-target="#ModalCadastrarCategoria">Cadastrar Disciplina
 										</button>
 									</div>
+									)}
 								</div>
 							</div>
 						</div>
 					</div>
-				)}
 				{/* MODAL DE GERENCIAR ACTIVITY FIM */}
 				{/* MODAL DE CADASTRAR CATEGORIA INICIO */}
-				{!!activities.length && (
-					<div
-						className="modal fade"
-						id="ModalCadastrarCategoria"
-						data-bs-backdrop="static"
-						data-bs-keyboard="false"
-						tabIndex="-1"
-						aria-labelledby="ModalCadastrarCategoriaAtividades"
-						aria-hidden="true"
-					>
-						<div className="modal-dialog modal-dialog-centered">
-							<div className="modal-content">
-								<div className="modal-header">
-									<h1 className="modal-title fs-5 secondary-color" id="ModalGerenciarAtividadesLabel">
-										Cadastrar Disciplina
-									</h1>
-									<button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-								</div>
-								<div className="modal-body">
-									<TextualInput
-										placeholder="Nome"
-										label="Nome da Disciplina"
-										value={sentForm.name}
-										onChange={(e) => updateForm('name', e)}
-									/>
-								</div>
-								<div className="modal-footer">
-									<button className="button my-2">Cadastrar</button>
-								</div>
+				<div
+					className="modal fade"
+					id="ModalCadastrarCategoria"
+					data-bs-backdrop="static"
+					data-bs-keyboard="false"
+					tabIndex="-1"
+					aria-labelledby="ModalCadastrarCategoriaAtividades"
+					aria-hidden="true"
+				>
+					<div className="modal-dialog modal-dialog-centered">
+						<div className="modal-content">
+							<div className="modal-header">
+								<h1 className="modal-title fs-5 secondary-color" id="ModalGerenciarAtividadesLabel">
+									Cadastrar Disciplina
+								</h1>
+								<button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+							</div>
+							<div className="modal-body">
+								<TextualInput
+									placeholder="Nome"
+									label="Nome da Disciplina"
+									value={sentCourse.name}
+									onChange={(e) => updateFormCourse('name', e)}
+								/>
+							</div>
+							<div className="modal-footer">
+								<button className="button my-2" onClick={submitCourseForm}>Cadastrar</button>
 							</div>
 						</div>
 					</div>
-				)}
+				</div>
 				{/* MODAL DE CADASTRAR CATEGORIA  FIM */}
 				{/* MODAL CADASTRO DE ATIVIDADE INICIO */}
-				{!!dependent && !!guardians.length && (
+				{!!dependent && (
 					<div
 						className="modal fade"
 						id="ModalCadastrarAtividades"
