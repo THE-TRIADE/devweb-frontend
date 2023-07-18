@@ -12,7 +12,7 @@ import { useNavigate } from 'react-router-dom';
 import { SelectLoginInput } from '../components/LoginInputs/SelectLoginInput/index.jsx';
 import { api } from '../config/api';
 export const guardianRoleEnum = [
-	{ key: 'Responsável', value: 'GUARDIAN' },
+	{ key: 'Responsável', value: 'RELATIVE' },
 	{ key: 'Diretor', value: 'PRINCIPAL' },
 	{ key: 'Professor', value: 'TEACHER' },
 ];
@@ -23,7 +23,7 @@ export const SignUp = () => {
 		cpf: '',
 		birthDate: '',
 		password: '',
-		userRole: '',
+		role: '',
 		passwordConfirmation: '',
 	});
 	const [errorMessages, setErrorMessages] = useState({
@@ -32,7 +32,7 @@ export const SignUp = () => {
 		cpf: null,
 		birthDate: null,
 		password: null,
-		userRole: null,
+		role: null,
 		passwordConfirmation: null,
 	});
 	const [trySignUp, setTrySignUp] = useState(false);
@@ -120,7 +120,7 @@ export const SignUp = () => {
 			cpf: null,
 			birthDate: null,
 			password: null,
-			userRole: null,
+			role: null,
 			passwordConfirmation: null,
 		});
 	};
@@ -158,9 +158,9 @@ export const SignUp = () => {
 									return { optName: role.key, optValue: role.value.toString() };
 								}),
 							]}
-							value={signUpForm.userRole}
+							value={signUpForm.role}
 							label="Papel do responsável"
-							onChange={(e) => updateForm('userRole', e)}
+							onChange={(e) => updateForm('role', e)}
 						/>
 						<DateLoginInput
 							placeholder="Data de Nascimento"
