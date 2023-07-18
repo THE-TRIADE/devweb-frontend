@@ -5,6 +5,7 @@ import { useEffect } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { Menu } from '../components/Menu';
 import { guardianRoleEnum } from './ManageGuardians';
+import {verifyPermission} from "../utils/permissions.js";
 
 const getActivities = (dependentId) => {
 	return api.get('/activity', { params: { dependentId } }).then((res) => {
@@ -29,7 +30,22 @@ export const FamilyGroupDetails = () => {
 	const [familyGroup, setFamilyGroup] = useState(null);
 	const [guards, setGuards] = useState([]);
 	const [activities, setActivities] = useState({});
+	const [permissionType, setPermissionType] = useState('NONE');
+	const [permissionTypeV, setPermissionTypeV] = useState('NONE');
 
+	const role = sessionStorage.getItem('role');
+	useEffect(() => {
+		const hasWritePermission = verifyPermission(role, 'GRUPO', true);
+		const hasReadPermission = verifyPermission(role, 'GRUPO');
+
+		if (hasWritePermission) {
+			setPermissionType('READ/WRITE');
+		} else if (hasReadPermission) {
+			setPermissionType('READ-ONLY');
+		} else {
+			setPermissionType('NONE');
+		}
+	}, []);
 	useEffect(() => {
 		const getFamilyGroup = () => {
 			api.get('/group-user-dependent/' + id).then((res) => {
@@ -66,9 +82,11 @@ export const FamilyGroupDetails = () => {
 					<h3 className="mt-5 pt-5">{familyGroup && familyGroup.name}</h3>
 					<div className="d-flex flex-row justify-content-between my-2">
 						<p className="fw-bold text-secondary pt-3">Responsáveis:</p>
+						{permissionType == 'READ/WRITE' && (
 						<Link className="customLink fs-5" to={'/manageguardians/' + id}>
 							Gerenciar Responsáveis
-						</Link>
+						</Link>)
+						}
 					</div>
 					{familyGroup &&
 						familyGroup.dependents.map((dependent) => (
@@ -88,10 +106,10 @@ export const FamilyGroupDetails = () => {
 					<p className="fw-bold text-secondary my-2">Dependentes:</p>
 					{familyGroup &&
 						familyGroup.dependents.map((dependent) => (
-							// <p className="fw-bold">{dependent.name}</p>
 							<CardDependents
 								key={dependent.id}
 								dependent={dependent}
+								redirect="/dependentactivitiesfamily/"
 								late={activities[dependent.id]?.late ?? 0}
 								created={activities[dependent.id]?.created ?? 0}
 								in_progress={activities[dependent.id]?.inProgress ?? 0}

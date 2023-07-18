@@ -1,8 +1,24 @@
 import PropTypes from 'prop-types';
 import '../styles.css';
 import { ButtonAction } from '../../ButtonAction';
+import {useEffect, useState} from "react";
+import {verifyPermission} from "../../../utils/permissions.js";
 
 export const CardFamilyGroup = ({ familyGroup, deleteFunction, href }) => {
+	const [permissionType, setPermissionType] = useState('NONE');
+	const role = sessionStorage.getItem('role');
+	useEffect(() => {
+		const hasWritePermission = verifyPermission(role, 'TURMA', true);
+		const hasReadPermission = verifyPermission(role, 'TURMA');
+
+		if (hasWritePermission) {
+			setPermissionType('READ/WRITE');
+		} else if (hasReadPermission) {
+			setPermissionType('READ-ONLY');
+		} else {
+			setPermissionType('NONE');
+		}
+	}, []);
 	return (
 		<div className="col-12 col-md-4 mb-3 mb-md-0 mt-3">
 			<a href={href + familyGroup.id} className="text-decoration-none">
@@ -19,7 +35,9 @@ export const CardFamilyGroup = ({ familyGroup, deleteFunction, href }) => {
 						))}
 					</div>
 					<div className="text-end mb-2 me-2">
-						<ButtonAction text="Excluir" bgColor="bg-danger" onClick={deleteFunction} />
+						{permissionType == 'READ/WRITE' && (
+							<ButtonAction text="Excluir" bgColor="bg-danger" onClick={deleteFunction} />
+						)}
 					</div>
 				</div>
 			</a>

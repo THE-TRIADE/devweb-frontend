@@ -14,7 +14,8 @@ export const FamilyGroup = () => {
 	const [familyGroupForm, setfamilyGroupForm] = useState({
 		name: '',
 		userId: sessionStorage.getItem('UserId'),
-		userRole: 'RELATIVE',
+		userRole: 'PRINCIPAL',
+		groupType: 'FAMILY',
 	});
 	const [dependents, setDependents] = useState([]);
 	const [errorMessages, setErrorMessages] = useState({
@@ -24,8 +25,8 @@ export const FamilyGroup = () => {
 	const [submit, setSubmit] = useState(false);
 	const [allUsers, setAllUsers] = useState([]);
 	const [users, setUsers] = useState([]);
-	const getAllUsers = () => {
-		api.get('/user').then((res) => {
+	const getAllUsers = (role) => {
+		api.get('/user?role='+ role).then((res) => {
 			const usersResponse = res.data;
 			res.data.forEach((x) => {
 				delete x.groups;
@@ -38,11 +39,10 @@ export const FamilyGroup = () => {
 
 	useEffect(() => {
 		clearValidationFields();
-		getAllUsers();
+		getAllUsers('RELATIVE');
 	}, []);
 
 	useEffect(() => {
-		console.log('Dependents', dependents);
 	}, [dependents]);
 
 	useEffect(() => {
