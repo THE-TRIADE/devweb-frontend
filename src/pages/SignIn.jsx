@@ -42,7 +42,8 @@ export const SignIn = () => {
 						console.log(res);
 						console.log(res.data.id);
 						sessionStorage.setItem('UserId', res.data.id);
-						navigate('/');
+						sessionStorage.setItem('role', res.data.role);
+						navigate('/spents');
 					})
 					.catch((err) => console.error(err));
 			} else {
