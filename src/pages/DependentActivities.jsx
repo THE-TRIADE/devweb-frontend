@@ -1,4 +1,4 @@
-import {Fragment, useState} from 'react';
+import { Fragment, useState } from 'react';
 import { api } from '../config/api';
 import { useEffect } from 'react';
 import { useParams } from 'react-router-dom';
@@ -80,11 +80,10 @@ export const DependentActivities = () => {
 			}
 		});
 	};
-	const getActivitiesByCategoryIdDependentId = (dependentId,categoryId) => {
-		api.get('/activity/by-dependent-id/'+ dependentId + '/by-category-id/' + categoryId)
-			.then((res) => {
-				setActivities(res.data)
-			})
+	const getActivitiesByCategoryIdDependentId = (dependentId, categoryId) => {
+		api.get('/activity/by-dependent-id/' + dependentId + '/by-category-id/' + categoryId).then((res) => {
+			setActivities(res.data);
+		});
 	};
 	const updateFinishForm = (inputName, event) => {
 		const { checked, value } = event.target;
@@ -153,7 +152,7 @@ export const DependentActivities = () => {
 						repeat: false,
 						daysToRepeat: [],
 						repeatUntil: '',
-						categoryId:'',
+						categoryId: '',
 					});
 
 					setSubmitActivity(false);
@@ -219,7 +218,9 @@ export const DependentActivities = () => {
 						/>
 					)}
 					<div className="my-2">
-						<a className="btn btn-outline-success " data-bs-toggle="modal" data-bs-target="#ModalGerenciarAtividades">Visualizar Categorias de Atividades</a>
+						<a className="btn btn-outline-success " data-bs-toggle="modal" data-bs-target="#ModalGerenciarAtividades">
+							Visualizar Categorias de Atividades
+						</a>
 					</div>
 					<SelectInput
 						options={[
@@ -522,30 +523,37 @@ export const DependentActivities = () => {
 								</div>
 								<div className="modal-body">
 									<div className="row">
-													<div className="table-responsive">
-														<table className="table">
-															<thead>
-
-															<tr>
-																<th scope="col">Categoria</th>
+										<div className="table-responsive">
+											<table className="table">
+												<thead>
+													<tr>
+														<th scope="col">Categoria</th>
+													</tr>
+												</thead>
+												<tbody>
+													{categories.map((category) => {
+														return (
+															<tr key={category.id}>
+																<td>{category.name}</td>
+																<td className="d-none">
+																	<a className="text-danger fw-bold text-decoration-none" role="button">
+																		Excluir
+																	</a>
+																</td>
 															</tr>
-															</thead>
-															<tbody>
-															{categories.map((category) => {
-																return (
-																	<tr key={category.id}>
-																		<td>{category.name}</td>
-																		<td className="d-none"><a className="text-danger fw-bold text-decoration-none" role="button">Excluir</a></td>
-																	</tr>
-																);
-															})}
-															</tbody>
-														</table>
-													</div>
+														);
+													})}
+												</tbody>
+											</table>
+										</div>
 									</div>
 									<div className="text-end">
-										<button className="buttonHeader d-none my-2 bg-success" data-bs-toggle="modal"
-														data-bs-target="#ModalCadastrarCategoria">Cadastrar Categoria
+										<button
+											className="buttonHeader d-none my-2 bg-success"
+											data-bs-toggle="modal"
+											data-bs-target="#ModalCadastrarCategoria"
+										>
+											Cadastrar Categoria
 										</button>
 									</div>
 								</div>
@@ -658,7 +666,7 @@ export const DependentActivities = () => {
 											}),
 										]}
 										value={sentForm.categoryId}
-										label="Categoria de Ativiade"
+										label="Categoria de Atividade"
 										onChange={(e) => updateForm('categoryId', e)}
 									/>
 									<SelectInput
