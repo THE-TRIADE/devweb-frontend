@@ -13,6 +13,7 @@ export const ClassesForm = () => {
 		name: '',
 		userId: sessionStorage.getItem('UserId'),
 		userRole: null,
+		groupType: 'CLASS',
 	});
 	const [dependents, setDependents] = useState([]);
 	const [allDependents, setAllDependents] = useState([]);
@@ -26,8 +27,8 @@ export const ClassesForm = () => {
 
 	const [submit, setSubmit] = useState(false);
 
-	const getAllUsers = () => {
-		api.get('/user').then((res) => {
+	const getAllUsers = (role) => {
+		api.get('/user?role='+ role).then((res) => {
 			const usersResponse = res.data;
 			res.data.forEach((x) => {
 				delete x.groups;
@@ -46,19 +47,13 @@ export const ClassesForm = () => {
 
 	useEffect(() => {
 		clearValidationFields();
-		getAllUsers();
+		getAllUsers('TEACHER');
 		getAllDependents();
 	}, []);
 
 	useEffect(() => {
 		console.log('Dependents', dependents);
 	}, [dependents]);
-
-	// useEffect(() => {
-	// 	if (dependents.length > dependentCount) {
-	// 		setDependents((ps) => [...ps.slice(0, -1)]);
-	// 	}
-	// }, [dependentCount]);
 
 	const navigate = useNavigate();
 
@@ -77,7 +72,7 @@ export const ClassesForm = () => {
 				api
 					.post('/group-user-dependent', newFamilyGroup)
 					.then(() => {
-						navigate('/');
+						navigate('/Classes');
 					})
 					.catch((err) => console.error(err));
 			}

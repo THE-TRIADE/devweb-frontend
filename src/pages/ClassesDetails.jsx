@@ -27,7 +27,6 @@ const getActivities = (dependentId) => {
 export const ClassesDetails = () => {
 	const { id } = useParams();
 	const [familyGroup, setFamilyGroup] = useState(null);
-	const [guards, setGuards] = useState([]);
 	const [activities, setActivities] = useState({});
 
 	useEffect(() => {
@@ -40,17 +39,9 @@ export const ClassesDetails = () => {
 	}, [id]);
 
 	useEffect(() => {
-		const getGuards = (dependentId) => {
-			api.get('/relation/by-dependent-id/' + dependentId).then((res) => {
-				setGuards((prevGuards) => ({
-					...prevGuards,
-					[dependentId]: res.data,
-				}));
-			});
-		};
+
 		if (familyGroup) {
 			familyGroup.dependents.forEach((dependent) => {
-				getGuards(dependent.id);
 				getActivities(dependent.id).then((activity) => {
 					setActivities((a) => ({ ...a, [dependent.id]: activity }));
 				});
@@ -64,30 +55,20 @@ export const ClassesDetails = () => {
 			<div className="container">
 				<div className="row">
 					<h3 className="mt-5 pt-5">{familyGroup && familyGroup.name}</h3>
-					<div className="d-flex flex-row justify-content-between my-2">
-						<p className="fw-bold text-secondary pt-3">Professores:</p>
-					</div>
-					{familyGroup &&
-						familyGroup.dependents.map((dependent) => (
-							<div key={dependent.id}>
-								<p className="fw-bold">Dependente: {dependent.name}</p>
-								{guards[dependent.id] &&
-									guards[dependent.id].map((guard) => (
-										<p key={guard.id} className="my-2">
-											{guard.userName}
-										</p>
-									))}
-							</div>
-						))}
 				</div>
 				<div className="row">
+					<p className="fw-bold text-secondary my-2">Professores:</p>
+					{familyGroup &&
+						familyGroup.users.map((user) => (
+							<p key={user.id}>{user.name}</p>
+						))}
 					<p className="fw-bold text-secondary my-2">Estudantes:</p>
 					{familyGroup &&
 						familyGroup.dependents.map((dependent) => (
-							// <p className="fw-bold">{dependent.name}</p>
 							<CardDependents
 								key={dependent.id}
 								dependent={dependent}
+								redirect="/dependentactivities/"
 								late={activities[dependent.id]?.late ?? 0}
 								created={activities[dependent.id]?.created ?? 0}
 								in_progress={activities[dependent.id]?.inProgress ?? 0}

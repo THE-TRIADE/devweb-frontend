@@ -4,21 +4,36 @@ import { api } from '../config/api';
 import { useEffect } from 'react';
 import { ButtonOutlineSecondary } from '../components/ButtonOutlineSecondary';
 import { Menu } from '../components/Menu';
+import {verifyPermission} from "../utils/permissions.js";
 
 export const Classes = () => {
 	const [familyGroups, setFamilyGroups] = useState([]);
 	const [recommendations, setRecommendations] = useState([]);
 	const [dependents, setDependents] = useState([]);
-	const getAllFamilyGroups = useCallback(() => {
-		let id = sessionStorage.getItem('UserId');
-		api.get('/user/' + id).then((res) => {
-			setFamilyGroups(res.data.groups);
+	const [permissionType, setPermissionType] = useState('NONE');
+	const role = sessionStorage.getItem('role');
+	useEffect(() => {
+		const hasWritePermission = verifyPermission(role, 'TURMA', true);
+		const hasReadPermission = verifyPermission(role, 'TURMA');
+
+		if (hasWritePermission) {
+			setPermissionType('READ/WRITE');
+		} else if (hasReadPermission) {
+			setPermissionType('READ-ONLY');
+		} else {
+			setPermissionType('NONE');
+		}
+	}, []);
+
+	const getAllFamilyGroups = useCallback((type) => {
+		api.get('/group-user-dependent?groupType='+ type).then((res) => {
+			setFamilyGroups(res.data);
 		});
 	}, []);
 	const sortearIdDependente = () => {
 		const randomIndex = Math.floor(Math.random() * dependents.length);
 		const dependenteSorteado = dependents[randomIndex];
-		return dependenteSorteado.dependentId;
+		return dependenteSorteado.id;
 	};
 	const getRecommendations = () => {
 		api.get('/recommendation/' + sortearIdDependente()).then((res) => {
@@ -26,17 +41,10 @@ export const Classes = () => {
 		});
 	};
 	const getDependents = () => {
-		api.get('/user/' + sessionStorage.getItem('UserId')).then((res) => {
-			const listDependent = res.data.relations.map((relation) => {
-				return {
-					dependentName: relation.dependentName,
-					dependentId: relation.dependentId,
-				};
-			});
-			setDependents(listDependent);
+		api.get('/dependent').then((res) => {
+			setDependents(res.data)
 		});
 	};
-
 	useEffect(() => {
 		if (dependents.length) {
 			getRecommendations();
@@ -44,12 +52,12 @@ export const Classes = () => {
 	}, [dependents])
 
 	useEffect(() => {
-		getAllFamilyGroups();
+		getAllFamilyGroups('CLASS');
 		getDependents();
 	}, [getAllFamilyGroups]);
 	const deleteFamilyGroup = (e, id) => {
 		e.preventDefault();
-		api.delete('/group-user-dependent/' + id).then(() => getAllFamilyGroups());
+		api.delete('/group-user-dependent/' + id).then(() => getAllFamilyGroups('CLASS'));
 	};
 	const randomIndex = Math.floor(Math.random() * recommendations.length);
 
@@ -74,7 +82,7 @@ export const Classes = () => {
 				)}
 				<div className="my-5 pt-5 d-flex flex-column flex-sm-row justify-content-between">
 					<h3 className="pt-3">Turmas</h3>
-					<ButtonOutlineSecondary text="Cadastrar Turma" link="/classesForm" />
+					{permissionType != 'READ-ONLY' && <ButtonOutlineSecondary text="Cadastrar Turma" link="/classesForm" />}
 				</div>
 				<div className="row">
 					{familyGroups.map((familyGroup) => (
