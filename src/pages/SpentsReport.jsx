@@ -7,6 +7,7 @@ import {verifyPermission} from "../utils/permissions.js";
 
 export const SpentsReports = () => {
 	const [spents, setSpents] = useState([]);
+	const [spentsPrincipal, setSpentsPrincipal] = useState([]);
 	const [dependents, setDependents] = useState([]);
 	const [dependentsPrincipal, setDependentsPrincipal] = useState([]);
 	const [permissionTypeV, setPermissionTypeV] = useState('NONE');
@@ -33,7 +34,11 @@ export const SpentsReports = () => {
 				setSpents(res.data);
 			});
 		};
-
+		const getSpentsPrincipal = () => {
+			api.get('/spent').then((res) => {
+				setSpentsPrincipal(res.data);
+			});
+		};
 		const getDependents = () => {
 			api.get('/user/' + sessionStorage.getItem('UserId')).then((res) => {
 				const listDependent = res.data.relations.map((relation) => {
@@ -51,6 +56,7 @@ export const SpentsReports = () => {
 			});
 		};
 		getSpents();
+		getSpentsPrincipal();
 		getDependents();
 		getDependentsPrincipal()
 	}, []);
@@ -83,7 +89,7 @@ export const SpentsReports = () => {
 												</tr>
 												</thead>
 												<tbody>
-												{spents.filter(spent => dependent.id === spent.dependentId).map((spent) => {
+												{spentsPrincipal.filter(spent => dependent.id === spent.dependentId).map((spent) => {
 													return (
 														<tr key={spent.id}>
 															<td>{spent.name}</td>
@@ -99,7 +105,7 @@ export const SpentsReports = () => {
 										<p className="text-end">
 											Total:{' '}
 											<span>
-											R$ {(spents.reduce((acc, spent) => {
+											R$ {(spentsPrincipal.reduce((acc, spent) => {
 												if (dependent.id === spent.dependentId) {
 													return acc + spent.value;
 												}
