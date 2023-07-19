@@ -4,7 +4,7 @@ import { api } from '../config/api';
 import { useEffect } from 'react';
 import { ButtonOutlineSecondary } from '../components/ButtonOutlineSecondary';
 import { Menu } from '../components/Menu';
-import {verifyPermission} from "../utils/permissions.js";
+import { verifyPermission } from '../utils/permissions.js';
 
 export const Classes = () => {
 	const [familyGroups, setFamilyGroups] = useState([]);
@@ -25,11 +25,20 @@ export const Classes = () => {
 		}
 	}, []);
 
-	const getAllFamilyGroups = useCallback((type) => {
-		api.get('/group-user-dependent?groupType='+ type).then((res) => {
-			setFamilyGroups(res.data);
-		});
-	}, []);
+	const getAllFamilyGroups = useCallback(
+		(type) => {
+			api.get('/group-user-dependent?groupType=' + type).then((res) => {
+				const groupsFiltered = res.data.filter((group) => {
+					const userIds = group.users.map((user) => user.id);
+					return userIds.some((id) => id == sessionStorage.getItem('UserId'));
+				});
+
+				const groups = permissionType == 'READ-ONLY' ? groupsFiltered : res.data;
+				setFamilyGroups(groups);
+			});
+		},
+		[permissionType],
+	);
 	const sortearIdDependente = () => {
 		const randomIndex = Math.floor(Math.random() * dependents.length);
 		const dependenteSorteado = dependents[randomIndex];
@@ -42,14 +51,14 @@ export const Classes = () => {
 	};
 	const getDependents = () => {
 		api.get('/dependent').then((res) => {
-			setDependents(res.data)
+			setDependents(res.data);
 		});
 	};
 	useEffect(() => {
 		if (dependents.length) {
 			getRecommendations();
 		}
-	}, [dependents])
+	}, [dependents]);
 
 	useEffect(() => {
 		getAllFamilyGroups('CLASS');
@@ -66,19 +75,19 @@ export const Classes = () => {
 			<Menu />
 			<div className="container">
 				{recommendations.length != 0 && (
-						<div className="row pt-5 mt-5">
-					<div className="p-3 bg-warning bg-opacity-50 border border-warning fw-semibold border-opacity-50 rounded-3">
-						{recommendations.length > 1 ? (
-							<p className="p-0 m-0">{recommendations[randomIndex]}</p>
-						) : (
-							recommendations.map((recommendation, index) => (
-								<p className="p-0 m-0" key={index}>
-									{recommendation}
-								</p>
-							))
-						)}
+					<div className="row pt-5 mt-5">
+						<div className="p-3 bg-warning bg-opacity-50 border border-warning fw-semibold border-opacity-50 rounded-3">
+							{recommendations.length > 1 ? (
+								<p className="p-0 m-0">{recommendations[randomIndex]}</p>
+							) : (
+								recommendations.map((recommendation, index) => (
+									<p className="p-0 m-0" key={index}>
+										{recommendation}
+									</p>
+								))
+							)}
+						</div>
 					</div>
-				</div>
 				)}
 				<div className="my-5 pt-5 d-flex flex-column flex-sm-row justify-content-between">
 					<h3 className="pt-3">Turmas</h3>

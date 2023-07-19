@@ -4,14 +4,17 @@ import { api } from '../config/api';
 import { useEffect } from 'react';
 import { ButtonOutlineSecondary } from '../components/ButtonOutlineSecondary';
 import { Menu } from '../components/Menu';
-import {verifyPermission} from "../utils/permissions.js";
+import { verifyPermission } from '../utils/permissions.js';
+import { useNavigate } from 'react-router-dom';
 
 export const Home = () => {
 	const [familyGroups, setFamilyGroups] = useState([]);
-	const [familyGroupsPrincial , setFamilyGroupPrincial] = useState([]);
+	const [familyGroupsPrincial, setFamilyGroupPrincial] = useState([]);
 	const [dependents, setDependents] = useState([]);
 	const [permissionType, setPermissionType] = useState('NONE');
 	const role = sessionStorage.getItem('role');
+	const navigate = useNavigate();
+
 	useEffect(() => {
 		const hasWritePermission = verifyPermission(role, 'TURMA', true);
 		const hasReadPermission = verifyPermission(role, 'TURMA');
@@ -22,6 +25,9 @@ export const Home = () => {
 			setPermissionType('READ-ONLY');
 		} else {
 			setPermissionType('NONE');
+		}
+		if (sessionStorage.getItem('UserId') == null) {
+			navigate('/login');
 		}
 	}, []);
 	const getAllFamilyGroups = useCallback((type) => {
@@ -43,7 +49,7 @@ export const Home = () => {
 	};
 
 	const getAllFamilyGroupsPrincipal = useCallback((type) => {
-		api.get('/group-user-dependent?groupType='+ type).then((res) => {
+		api.get('/group-user-dependent?groupType=' + type).then((res) => {
 			setFamilyGroupPrincial(res.data);
 		});
 	}, []);
@@ -56,10 +62,9 @@ export const Home = () => {
 	const deleteFamilyGroup = (e, id) => {
 		e.preventDefault();
 		api.delete('/group-user-dependent/' + id).then(() => {
-				getAllFamilyGroups()
-				getAllFamilyGroupsPrincipal('FAMILY')
-		}
-		);
+			getAllFamilyGroups();
+			getAllFamilyGroupsPrincipal('FAMILY');
+		});
 	};
 
 	return (
@@ -69,32 +74,30 @@ export const Home = () => {
 				<div className="my-5 pt-5 d-flex flex-column flex-sm-row justify-content-between">
 					<h3 className="pt-3">Grupos Familiares</h3>
 					{permissionType == 'READ/WRITE' && (
-						<ButtonOutlineSecondary text="Cadastrar Grupo Familiar" link="/familygroup" />)
-					}
+						<ButtonOutlineSecondary text="Cadastrar Grupo Familiar" link="/familygroup" />
+					)}
 				</div>
 
 				<div className="row">
-					{permissionType == 'READ/WRITE' ?
-						familyGroupsPrincial.map((familyGroup) => (
+					{permissionType == 'READ/WRITE'
+						? familyGroupsPrincial.map((familyGroup) => (
 								<CardFamilyGroup
 									href="/familyGroupDetails/"
 									key={familyGroup.id}
 									familyGroup={familyGroup}
 									deleteFunction={(e) => deleteFamilyGroup(e, familyGroup.id)}
 								/>
-							))
-						:
-						familyGroups.map((familyGroup) => (
-							<CardFamilyGroup
-								href="/familyGroupDetails/"
-								key={familyGroup.id}
-								familyGroup={familyGroup}
-								deleteFunction={(e) => deleteFamilyGroup(e, familyGroup.id)}
-							/>
-						))
-					}
+						  ))
+						: familyGroups.map((familyGroup) => (
+								<CardFamilyGroup
+									href="/familyGroupDetails/"
+									key={familyGroup.id}
+									familyGroup={familyGroup}
+									deleteFunction={(e) => deleteFamilyGroup(e, familyGroup.id)}
+								/>
+						  ))}
+				</div>
 			</div>
-		</div>
 		</div>
 	);
 };
